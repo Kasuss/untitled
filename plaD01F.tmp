@@ -1,0 +1,182 @@
+[gd_scene load_steps=9 format=3 uid="uid://bo4xu3h0hcojs"]
+
+[ext_resource type="Texture2D" uid="uid://dfrs6qakpp3m4" path="res://crosshair.png" id="1_bq2g6"]
+[ext_resource type="Script" path="res://crosshair.gd" id="2_mfkjx"]
+[ext_resource type="PackedScene" uid="uid://cnm16hqcv8nsk" path="res://hitbox_component.tscn" id="3_fd83e"]
+[ext_resource type="PackedScene" uid="uid://cx4y658vvqbdy" path="res://health_component.tscn" id="4_fabxs"]
+
+[sub_resource type="GDScript" id="GDScript_m8ltu"]
+script/source = "extends CharacterBody3D
+
+@onready var camera = %Camera3D
+@onready var head = $Head
+@onready var hand = %Pivot
+@onready var handle = hand.transform.origin
+@onready var hitscan = %hitscan
+var area
+
+
+var speed
+const WALK_SPEED = 5.0
+const SPRINT_SPEED = 10.0
+const CROUCH_SPEED = 3.0
+const JUMP_VELOCITY = 4.5
+const SENSITIVITY = 0.005
+
+const BASE_FOV = 90.0
+const FOV_CHANGE = 1
+
+
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+var gravity = 9.8
+
+# head bob
+const BOB_FREQ = 2.0
+const BOB_AMP = 0.02
+var t_bob = 0.0
+
+func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _unhandled_input(event):
+	if event is InputEventMouseMotion:
+		head.rotate_y(-event.relative.x * SENSITIVITY)
+		camera.rotate_x(-event.relative.y * SENSITIVITY)
+		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-40), deg_to_rad(60))
+		
+
+
+func _physics_process(delta):
+	#shoot
+	
+	if Input.is_action_pressed(\"shoot\"):
+		if hitscan.is_colliding() and HitboxComponent:
+			var target : HitboxComponent = area
+			var attack = Damage.new()
+			attack.attack_damage = attack_damage
+			
+			area.damage(attack) 
+		
+		else:
+			print(\"missed\")
+	
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+
+	# Handle jump.
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+		
+	if Input.is_action_pressed(\"close\"):
+		get_tree().quit()
+		
+	if Input.is_action_pressed(\"sprint\"):
+		speed = SPRINT_SPEED
+	else:
+		speed = WALK_SPEED
+		
+##TEST TEST TEST##
+		
+	if Input.is_action_pressed(\"weapon 1\") and Game.inventory[\"Revolver\"] == 1:
+		const WEAPON = preload(\"res://gun.tscn\")
+		var weapon = WEAPON.instantiate()
+		get_node(\"Head/Camera3D/Pivot/Weapon\").add_child(weapon)
+		weapon.global_position = hand.global_position
+		weapon.global_rotation = hand.global_rotation
+
+
+	var input_dir = Input.get_vector(\"left\", \"right\", \"up\", \"down\")
+	var direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if is_on_floor():
+		if direction:
+			velocity.x = direction.x * speed
+			velocity.z = direction.z * speed
+		else:
+			velocity.x = 0.0
+			velocity.z = 0.0
+	else:
+		velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
+		velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
+	t_bob += delta * velocity.length() * float(is_on_floor())
+	camera.transform.origin = _headbob(t_bob)
+	
+	# FOV
+	var velocity_clamped = clamp(velocity.length(), 0.5, SPRINT_SPEED * 2)
+	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
+	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
+
+	move_and_slide()
+	
+func _headbob(time) -> Vector3:
+	var pos = Vector3.ZERO
+	pos.y = sin(time*BOB_FREQ) * BOB_AMP
+	pos.x = cos(time*BOB_FREQ / 2) * BOB_AMP
+	return pos
+"
+
+[sub_resource type="GDScript" id="GDScript_oytf7"]
+script/source = "extends RayCast3D
+
+func _physics_process(delta):
+	
+	pass
+"
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_jx0nl"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jrcsa"]
+
+[node name="player" type="CharacterBody3D"]
+up_direction = Vector3(0, -1, 0)
+script = SubResource("GDScript_m8ltu")
+
+[node name="crosshair" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="TextureRect" type="TextureRect" parent="crosshair"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_bq2g6")
+script = ExtResource("2_mfkjx")
+metadata/_edit_use_anchors_ = true
+
+[node name="Head" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.006, 0, -0.179)
+fov = 90.0
+
+[node name="Pivot" type="Marker3D" parent="Head/Camera3D"]
+unique_name_in_owner = true
+transform = Transform3D(0.984808, -0.0151344, -0.172987, 0, 0.996195, -0.0871557, 0.173648, 0.0858316, 0.98106, 0.232086, -0.0816291, -0.366161)
+gizmo_extents = 0.5
+
+[node name="Weapon" type="Node3D" parent="Head/Camera3D/Pivot"]
+transform = Transform3D(0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, 0.984808, 0.161481, -0.397327, 0.560474)
+
+[node name="hitscan" type="RayCast3D" parent="Head/Camera3D"]
+unique_name_in_owner = true
+visible = false
+target_position = Vector3(0, 0, -100)
+collision_mask = 2
+hit_from_inside = true
+debug_shape_custom_color = Color(0, 0.65098, 0.0627451, 1)
+script = SubResource("GDScript_oytf7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_jx0nl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_jrcsa")
+
+[node name="DamageComponent" type="Node3D" parent="."]
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("3_fd83e")]
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="HitboxComponent"]
+shape = SubResource("CapsuleShape3D_jrcsa")
+
+[node name="HealthComponent" parent="." instance=ExtResource("4_fabxs")]
