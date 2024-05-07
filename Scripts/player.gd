@@ -17,15 +17,18 @@ var inventory = {
 	"HeavyA": 25,
 }
 var reserves = inventory[Game.equipped["Ammo Type"]]
+var reloadin = false
 
 ##Script Calls
 var gun
 var shot = false
 var gun_node
 var target
+var component : GunComponent
 
 ##Mobility
 var speed
+var slidejumping = false
 var sliding = false
 var sliding_direction = Vector3(0,0,0)
 const WALK_SPEED = 5.0
@@ -35,13 +38,13 @@ const CROUCH_SPEED = 3.0
 const JUMP_VELOCITY = 4.5
 const SENSITIVITY = 0.005
 
-const BASE_FOV = 70.0
+const BASE_FOV = 90.0
 const FOV_CHANGE = 1
 
 var gravity = 9.8
 
 # head bob
-const BOB_FREQ = 2.0
+const BOB_FREQ = 3.0
 const BOB_AMP = 0.04
 var t_bob = 0.0
 
@@ -60,13 +63,19 @@ func _input(event):
 		weapon.global_rotation = hand.global_rotation
 		gun = get_node("Head/Camera3D/Pivot/Weapon").get_child(0)
 		gun_node = gun.get_node("GunComponent")
+		cd = gun_node.shootcd
 		animate(gun_node, 4)
+
 		
 	if event.is_action_pressed("shoot") and mag > 0:
-		gun_node = gun.get_node("GunComponent")
+		if reloadin:
+			return
 		shoot(target)
 		
-	if event.is_action_pressed("reload") and reserves > 0:
+	if event.is_action_pressed("reload") and reserves > 0 and not mag == mag_max:
+		if shot:
+			return
+		reloadin = true
 		var time = animate(gun_node, 3)
 		reloading(time)
 		
@@ -100,14 +109,17 @@ func _unhandled_input(event):
 func shoot(target):
 	if shot == true:
 		return
+	
 	if target is HitboxComponent:
 		var enemy : HitboxComponent = target
 		var attack = Damage.new()
 		enemy.damage(attack)
 		mag -= 1
+		cd = gun_node.shootcd
 		shot = true
 	else:
 		mag -= 1
+		cd = gun_node.shootcd
 		shot = true
 	animate(gun_node, 2)
 
@@ -115,17 +127,20 @@ func shoot(target):
 
 @warning_ignore("shadowed_variable")
 func animate(gun_node, action):
-	var shoot : GunComponent = gun_node
+	var node : GunComponent = gun_node
 	var animating = Animate.new()
-	if shoot == null:
+	if node == null:
 		return
-	return shoot.animation(animating, action)
+	return node.animation(animating, action)
 
 func reloading(time):
+	if time == null:
+		return
 	await get_tree().create_timer(time).timeout
 	while reserves > 0 and mag < mag_max:
 		mag += 1
 		reserves -= 1
+	reloadin = false
 	pass
 
 func _physics_process(delta):
@@ -142,9 +157,12 @@ func _physics_process(delta):
 		mobility(delta)
 
 func mobility(delta):
+	move_and_slide()
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
+	else:
+		slidejumping = false
 
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
@@ -160,15 +178,17 @@ func mobility(delta):
 
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	var direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if slidejumping == true:
+		velocity.y -= (gravity/2) * delta
 	if is_on_floor():
 		if direction:
-			animate(gun_node, 1)
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
+			animate(gun_node,1)
 		else:
-			animate(gun_node, 0)
 			velocity.x = 0.0
 			velocity.z = 0.0
+			animate(gun_node,0)
 	else:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
@@ -180,21 +200,30 @@ func mobility(delta):
 	var velocity_clamped = clamp(velocity.length(), 0.5, SPRINT_SPEED * 2)
 	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
 	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
-	move_and_slide()
+	
 	
 func slide(delta):
+	move_and_slide()
+	if not is_on_floor():
+		velocity.y -= (gravity/2) * delta
+		
 	if is_on_floor():
 		if speed >= 4.0:
 			speed -= SLIDE_SPEED * delta
 			velocity.x = sliding_direction.x * speed
 			velocity.z = sliding_direction.z * speed
+		if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+			velocity.y = JUMP_VELOCITY * 2
+			speed = speed * 2
+			slidejumping = true
+			sliding = false
 	if speed < 4.0:
 		sliding = false
 	# FOV
 	var velocity_clamped = clamp(velocity.length(), 0.5, SLIDE_SPEED * 2)
 	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
 	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
-	move_and_slide()
+	
 
 func _headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
