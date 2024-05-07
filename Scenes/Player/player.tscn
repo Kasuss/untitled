@@ -1,0 +1,109 @@
+[gd_scene load_steps=11 format=3 uid="uid://bo4xu3h0hcojs"]
+
+[ext_resource type="Texture2D" uid="uid://dfrs6qakpp3m4" path="res://Textures/UI/crosshair.png" id="1_bq2g6"]
+[ext_resource type="Script" path="res://Scripts/player.gd" id="1_tn7hv"]
+[ext_resource type="Script" path="res://Scripts/Ammo.gd" id="2_0mlvl"]
+[ext_resource type="Script" path="res://Scripts/crosshair.gd" id="2_mfkjx"]
+[ext_resource type="PackedScene" uid="uid://cnm16hqcv8nsk" path="res://Scenes/Components/hitbox_component.tscn" id="5_l30iv"]
+[ext_resource type="PackedScene" uid="uid://cx4y658vvqbdy" path="res://Scenes/Components/health_component.tscn" id="6_rg2e4"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5a4it"]
+font_size = 36
+font_color = Color(1, 1, 0, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_jx0nl"]
+
+[sub_resource type="GDScript" id="GDScript_oytf7"]
+script/source = "extends RayCast3D
+
+func _physics_process(delta):
+	collide_with_areas = true
+	collide_with_bodies = true
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jrcsa"]
+
+[node name="player" type="CharacterBody3D"]
+up_direction = Vector3(0, -1, 0)
+script = ExtResource("1_tn7hv")
+
+[node name="UI" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="PanelContainer" type="PanelContainer" parent="UI"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -232.0
+offset_top = -136.0
+offset_right = -40.0
+offset_bottom = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Ammo" type="Label" parent="UI/PanelContainer" node_paths=PackedStringArray("character")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Mag Size"
+label_settings = SubResource("LabelSettings_5a4it")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("2_0mlvl")
+character = NodePath("../../..")
+
+[node name="crosshair" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="TextureRect" type="TextureRect" parent="crosshair"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_bq2g6")
+script = ExtResource("2_mfkjx")
+metadata/_edit_use_anchors_ = true
+
+[node name="Head" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.006, 0, -0.179)
+fov = 90.0
+
+[node name="Pivot" type="Marker3D" parent="Head/Camera3D"]
+unique_name_in_owner = true
+transform = Transform3D(0.984808, -0.0151344, -0.172987, 0, 0.996195, -0.0871557, 0.173648, 0.0858316, 0.98106, -0.125, -0.02, 0.215)
+gizmo_extents = 0.5
+
+[node name="Weapon" type="Node3D" parent="Head/Camera3D/Pivot"]
+transform = Transform3D(0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, 0.984808, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Head/Camera3D/Pivot"]
+transform = Transform3D(0.983284, 2.54681e-09, 0.182081, -0.0158694, 0.996194, 0.0856988, -0.181388, -0.0871557, 0.979543, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_jx0nl")
+skeleton = NodePath("../../../..")
+
+[node name="hitscan" type="RayCast3D" parent="Head/Camera3D"]
+unique_name_in_owner = true
+visible = false
+target_position = Vector3(0, 0, -100)
+collision_mask = 2
+hit_from_inside = true
+debug_shape_custom_color = Color(0, 0.65098, 0.0627451, 1)
+script = SubResource("GDScript_oytf7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_jrcsa")
+
+[node name="DamageComponent" type="Node3D" parent="."]
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("5_l30iv")]
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="HitboxComponent"]
+shape = SubResource("CapsuleShape3D_jrcsa")
+
+[node name="HealthComponent" parent="." instance=ExtResource("6_rg2e4")]

@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://baf5tx6ny7y61"
+path="res://.godot/imported/scopeB.obj-15a3cdefa61915f557f162ef92495ffd.mesh"
+
+[deps]
+
+files=["res://.godot/imported/scopeB.obj-15a3cdefa61915f557f162ef92495ffd.mesh"]
+
+source_file="res://old assets/Models/OBJ format/scopeB.obj"
+dest_files=["res://.godot/imported/scopeB.obj-15a3cdefa61915f557f162ef92495ffd.mesh", "res://.godot/imported/scopeB.obj-15a3cdefa61915f557f162ef92495ffd.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

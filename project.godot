@@ -11,15 +11,15 @@ config_version=5
 [application]
 
 config/name="Untitled"
-run/main_scene="res://world2.tscn"
+run/main_scene="res://Scenes/Environments/world2.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Utils="*res://Global/Utils.gd"
-Game="*res://Global/Game.gd"
-Attack="*res://Global/Attack.gd"
+Utils="*res://Scripts/Global/Utils.gd"
+Game="*res://Scripts/Global/Game.gd"
+Attack="*res://Scripts/Global/Attack.gd"
 
 [display]
 
