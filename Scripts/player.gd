@@ -19,8 +19,6 @@ var inventory = {
 var reserves = inventory[Game.equipped["Ammo Type"]]
 
 ##State
-var idle = false
-var moving = false
 var reloadin = false
 var slidejumping = false
 var sliding = false
@@ -33,10 +31,13 @@ var target
 var component : GunComponent
 
 ##Mobility
+var dash = false
+var dash_cd = 0.3
 var speed
+var dash_direction = Vector3(0,0,0)
 var sliding_direction = Vector3(0,0,0)
 const WALK_SPEED = 5.0
-const SPRINT_SPEED = 8.0
+const DASH_SPEED = 20.0
 const SLIDE_SPEED = 20.0
 const CROUCH_SPEED = 3.0
 const JUMP_VELOCITY = 4.5
@@ -82,11 +83,17 @@ func _input(event):
 		var time = animate(gun_node, 3)
 		reloading(time)
 		
-	if event.is_action_pressed("slide") and sliding == false:
+	if event.is_action_pressed("slide") and not sliding:
 		sliding = true
 		sliding_direction = (head.transform.basis * Vector3(movement.x, 0, movement.y)).normalized()
 		speed = SLIDE_SPEED
 		camera.transform.origin -= Vector3(0,0.25,0)
+		
+	if event.is_action_pressed("dash") and not dash:
+		dash = true
+		dash_cd = 0.3
+		dash_direction = (head.transform.basis * Vector3(movement.x, 0, movement.y)).normalized()
+		speed = DASH_SPEED
 
 
 
@@ -150,21 +157,24 @@ func _physics_process(delta):
 	if cd <= 0:
 		shot = false
 	
+	if dash:
+		dashing(delta)
+		dash_cd -= delta
+	
 	if sliding and is_on_floor():
 		slide(delta)
-	else:
+	elif not dash:
 		mobility(delta)
-		
 
 
 func mobility(delta):
 	move_and_slide()
+	speed = WALK_SPEED
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	else:
 		slidejumping = false
-
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -172,26 +182,17 @@ func mobility(delta):
 	if Input.is_action_pressed("close"):
 		get_tree().quit()
 
-	if Input.is_action_pressed("sprint"):
-		speed = SPRINT_SPEED
-	else:
-		speed = WALK_SPEED
-
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	var direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if slidejumping == true:
 		velocity.y -= (gravity/2) * delta
 	if is_on_floor():
 		if direction:
-			velocity.x = direction.x * speed
-			velocity.z = direction.z * speed
-			moving = true
-			idle = false
+			velocity.x = lerp(velocity.x, direction.x * speed, delta * 12.0)
+			velocity.z = lerp(velocity.z, direction.z * speed, delta * 12.0)
 		else:
-			velocity.x = 0.0
-			velocity.z = 0.0
-			moving = false
-			idle = true
+			velocity.x = 0
+			velocity.z = 0
 	else:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
@@ -200,10 +201,9 @@ func mobility(delta):
 	camera.transform.origin = _headbob(t_bob)
 	
 	# FOV
-	var velocity_clamped = clamp(velocity.length(), 0.5, SPRINT_SPEED * 2)
+	var velocity_clamped = clamp(velocity.length(), 0.5, DASH_SPEED * 2)
 	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
 	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
-	
 	
 func slide(delta):
 	move_and_slide()
@@ -224,6 +224,20 @@ func slide(delta):
 		sliding = false
 	# FOV
 	var velocity_clamped = clamp(velocity.length(), 0.5, SLIDE_SPEED * 2)
+	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
+	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
+	
+func dashing(delta):
+	move_and_slide()
+	speed -= DASH_SPEED * delta
+	velocity.y = 0
+	velocity.x = dash_direction.x * speed
+	velocity.z = dash_direction.z * speed
+	if dash_cd <= 0:
+		dash_cd = 0
+		dash = false
+	# FOV
+	var velocity_clamped = clamp(velocity.length(), 0.5, DASH_SPEED * 2)
 	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
 	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
 	
