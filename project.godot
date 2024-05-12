@@ -13,6 +13,7 @@ config_version=5
 config/name="Untitled"
 run/main_scene="res://Scenes/Environments/world2.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
+run/max_fps=144
 config/icon="res://icon.svg"
 
 [autoload]
@@ -20,6 +21,7 @@ config/icon="res://icon.svg"
 Utils="*res://Scripts/Global/Utils.gd"
 Game="*res://Scripts/Global/Game.gd"
 Attack="*res://Scripts/Global/Attack.gd"
+Anim="*res://Scripts/Global/Animate.gd"
 
 [display]
 

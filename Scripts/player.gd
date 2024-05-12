@@ -17,7 +17,13 @@ var inventory = {
 	"HeavyA": 25,
 }
 var reserves = inventory[Game.equipped["Ammo Type"]]
+
+##State
+var idle = false
+var moving = false
 var reloadin = false
+var slidejumping = false
+var sliding = false
 
 ##Script Calls
 var gun
@@ -28,8 +34,6 @@ var component : GunComponent
 
 ##Mobility
 var speed
-var slidejumping = false
-var sliding = false
 var sliding_direction = Vector3(0,0,0)
 const WALK_SPEED = 5.0
 const SPRINT_SPEED = 8.0
@@ -39,7 +43,7 @@ const JUMP_VELOCITY = 4.5
 const SENSITIVITY = 0.005
 
 const BASE_FOV = 90.0
-const FOV_CHANGE = 1
+const FOV_CHANGE = 0.3
 
 var gravity = 9.8
 
@@ -64,7 +68,6 @@ func _input(event):
 		gun = get_node("Head/Camera3D/Pivot/Weapon").get_child(0)
 		gun_node = gun.get_node("GunComponent")
 		cd = gun_node.shootcd
-		animate(gun_node, 4)
 
 		
 	if event.is_action_pressed("shoot") and mag > 0:
@@ -109,18 +112,14 @@ func _unhandled_input(event):
 func shoot(target):
 	if shot == true:
 		return
-	
-	if target is HitboxComponent:
-		var enemy : HitboxComponent = target
+		
+	mag -= 1
+	cd = gun_node.shootcd
+	shot = true
+	if target != null:
 		var attack = Damage.new()
-		enemy.damage(attack)
-		mag -= 1
-		cd = gun_node.shootcd
-		shot = true
-	else:
-		mag -= 1
-		cd = gun_node.shootcd
-		shot = true
+		target.damage(attack)
+
 	animate(gun_node, 2)
 
 
@@ -155,6 +154,8 @@ func _physics_process(delta):
 		slide(delta)
 	else:
 		mobility(delta)
+		
+
 
 func mobility(delta):
 	move_and_slide()
@@ -184,11 +185,13 @@ func mobility(delta):
 		if direction:
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
-			animate(gun_node,1)
+			moving = true
+			idle = false
 		else:
 			velocity.x = 0.0
 			velocity.z = 0.0
-			animate(gun_node,0)
+			moving = false
+			idle = true
 	else:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
@@ -231,5 +234,7 @@ func _headbob(time) -> Vector3:
 	pos.x = cos(time*BOB_FREQ / 2) * BOB_AMP
 	return pos
 
-
+func update_animation():
+	
+	pass
 

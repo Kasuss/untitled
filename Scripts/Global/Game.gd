@@ -1,5 +1,8 @@
 extends Node
 
+##GLOBAL STATS
+var last_damage : int
+
 var max_limits = {
 	"LightA": 300,
 	"MediumA": 240,

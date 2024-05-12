@@ -62,6 +62,7 @@ roughness_texture_channel = 4
 [node name="world" type="Node3D"]
 
 [node name="player" parent="." instance=ExtResource("1_b1slu")]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.444, 1, -2.188)
 up_direction = Vector3(0, 1, 0)
 
@@ -72,6 +73,12 @@ environment = SubResource("Environment_0wjso")
 
 [node name="floor" type="CSGBox3D" parent="walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.037, -0.5, -0.056)
+use_collision = true
+size = Vector3(100, 1, 100)
+material = SubResource("StandardMaterial3D_ho166")
+
+[node name="floor" type="CSGBox3D" parent="walls/floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.037, 20.6599, -0.056)
 use_collision = true
 size = Vector3(100, 1, 100)
 material = SubResource("StandardMaterial3D_ho166")

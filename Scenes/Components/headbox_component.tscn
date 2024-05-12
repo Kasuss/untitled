@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://qunglynxovun"]
+
+[ext_resource type="Script" path="res://Scripts/HeadboxComponent.gd" id="1_5gdsc"]
+
+[node name="HeadboxComponent" type="Area3D"]
+script = ExtResource("1_5gdsc")

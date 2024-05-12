@@ -1,40 +1,72 @@
-[gd_scene load_steps=7 format=3 uid="uid://j1w7bkvy0cf8"]
+[gd_scene load_steps=11 format=3 uid="uid://j1w7bkvy0cf8"]
 
 [ext_resource type="PackedScene" uid="uid://cx4y658vvqbdy" path="res://Scenes/Components/health_component.tscn" id="1_chorv"]
+[ext_resource type="PackedScene" uid="uid://qunglynxovun" path="res://Scenes/Components/headbox_component.tscn" id="2_3bqnc"]
 [ext_resource type="PackedScene" uid="uid://cnm16hqcv8nsk" path="res://Scenes/Components/hitbox_component.tscn" id="2_yrpw1"]
+[ext_resource type="PackedScene" uid="uid://tdyq2xtygwyi" path="res://Scenes/Components/hitmarker_component.tscn" id="4_jpbyx"]
 
-[sub_resource type="GDScript" id="GDScript_dlneg"]
-resource_name = "enemy"
-script/source = "extends CharacterBody3D
-"
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yr5rw"]
-radius = 0.49
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wa8hr"]
+radius = 0.25
+height = 0.5
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_w4a02"]
+height = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0k07l"]
 albedo_color = Color(0.584314, 0, 0, 1)
 
+[sub_resource type="SphereMesh" id="SphereMesh_0fvea"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yr5rw"]
+radius = 0.486765
+height = 1.00058
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3qw1y"]
+radius = 0.289749
+height = 0.664048
+
 [node name="enemy" type="CharacterBody3D"]
+motion_mode = 1
 floor_stop_on_slope = false
 platform_on_leave = 2
-script = SubResource("GDScript_dlneg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("CapsuleShape3D_yr5rw")
+shape = SubResource("CapsuleShape3D_wa8hr")
 disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_w4a02")
 surface_material_override/0 = SubResource("StandardMaterial3D_0k07l")
 
-[node name="HealthComponent" parent="." instance=ExtResource("1_chorv")]
-MAX_HEALTH = 20.0
+[node name="head" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.608569, 0)
+mesh = SubResource("SphereMesh_0fvea")
+surface_material_override/0 = SubResource("StandardMaterial3D_0k07l")
 
-[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("2_yrpw1")]
+[node name="HealthComponent" parent="." node_paths=PackedStringArray("ui") instance=ExtResource("1_chorv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00185728, 0)
+MAX_HEALTH = 40.0
+ui = NodePath("../Components/HitmarkerComponent")
+
+[node name="Components" type="Node3D" parent="."]
+
+[node name="HitmarkerComponent" parent="Components" node_paths=PackedStringArray("spawn") instance=ExtResource("4_jpbyx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.32, 0)
+spawn = NodePath(".")
+
+[node name="HitboxComponent" parent="Components" node_paths=PackedStringArray("health_component") instance=ExtResource("2_yrpw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 collision_layer = 2
-health_component = NodePath("../HealthComponent")
+health_component = NodePath("../../HealthComponent")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="HitboxComponent"]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Components/HitboxComponent"]
 shape = SubResource("CapsuleShape3D_yr5rw")
+
+[node name="HeadboxComponent2" parent="Components" node_paths=PackedStringArray("health_component") instance=ExtResource("2_3bqnc")]
+collision_layer = 2
+health_component = NodePath("../../HealthComponent")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Components/HeadboxComponent2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6165, 0)
+shape = SubResource("CapsuleShape3D_3qw1y")
