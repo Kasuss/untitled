@@ -3,8 +3,8 @@ class_name HeadboxComponent
 
 @export var health_component : HealthComponent
 
-func damage(attack: Damage):
+@warning_ignore("shadowed_variable")
+func damage(damage, multiplier):
+	damage = damage * multiplier
 	if health_component:
-		health_component.crit(attack)
-
-
+		health_component.damage(damage)

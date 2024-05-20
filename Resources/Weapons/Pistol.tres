@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="WeaponDefaults" load_steps=2 format=3 uid="uid://qw070jtfx7jn"]
+
+[ext_resource type="Script" path="res://Resources/weapon_manager.gd" id="1_oqxmi"]
+
+[resource]
+script = ExtResource("1_oqxmi")
+Name = "Pistol"
+WeaponType = "Pistol"
+AmmoType = "Light"
+AmmoCap = 20
+LoadedAmmo = 20
+Damage = 5
+AmmoIncrement = 0
+Draw = "Anim/draw"
+Idle = "Anim/idle"
+Walk = "Anim/walk"
+Shoot = "Anim/shoot"
+Shoot2 = ""
+Reload = "Anim/reload"
+AmmoLoaded = 1.4
+CanShoot = 0.2
+DrawTime = 0.9

@@ -1,51 +1,75 @@
 extends Node3D
 class_name GunComponent
 
+signal finished
+
 @export var animator : AnimationPlayer
 @export var animationtree : AnimationTree
-@export var reloaded : float
-@export var shootcd : float
 @onready var player = get_node("/root/world/player")
+@onready var weapon = get_parent().get_parent()
 ##States
 var idle = "parameters/conditions/idle"
 var walking = "parameters/conditions/walking"
-var animations = [Anim.animations[0],Anim.animations[1],Anim.animations[2],Anim.animations[3],Anim.animations[4]]
+var animations = Anim.animations
+
+var loadedtime
+var shoottime
+var drawtime
+var starttime
 
 func _ready():
 	animationtree.active = false
-	animator.play("Animations/draw")
+	weapon.connect("update_timers", update_timers)
+	weapon.connect("animate",animate)
 	
 func _physics_process(_delta):
 	if animationtree.active == false:
 		return
-	
 	if player.velocity == Vector3.ZERO:
 		animationtree[walking] = false
 		animationtree[idle] = true
 	else:
 		animationtree[walking] = true
 		animationtree[idle] = false
-
-@warning_ignore("shadowed_variable")
-func animation(animate: Animate, animation):
-	animationtree.active = false
-	var call = animate.animations[animation]
-	## 0 = idle, 1 = walk, 2 = shoot, 3 = reload, 4 = draw ##
-	var length = animator.get_current_animation_length()
-	var speedscale = animator.speed_scale
-	
-	if call == animations[3]:
-		animator.play(str(call))
-		length = reloaded
-		return (length / speedscale)
 		
-	if call == animations[2]:
-		animator.play(str(call))
-		if shootcd < length:
-			animator.stop()
-			animator.play(str(call))
-			
+func animate(animation, loops):
+	animationtree.active = false
+	print(animations[animation])
+	animator.play(animations[animation])
+	if loops > 0:
+		loop_animation(loops)
+		return
+	if animation == 0:
+		await get_tree().create_timer(drawtime).timeout
+		finished.emit()
+	if animation == 3:
+		if animator.current_animation == animations[3]:
+			animator.seek(0)
+		await get_tree().create_timer(shoottime).timeout
+		finished.emit()
+
+func loop_animation(loops):
+	loops -= 1
+	await get_tree().create_timer(loadedtime).timeout
+	while loops != 0:
+		print(loops)
+		animator.seek(starttime)
+		await get_tree().create_timer(loadedtime-starttime).timeout
+		loops -= 1
+		finished.emit()
 
 func _on_animation_animation_finished(anim_name):
-	if anim_name == animations[2] or animations[3] or animations[4]:
+	if anim_name == animations[0] or animations[3] or animations[4] or animations[5]:
 		animationtree.active = true
+		
+func update_timers(start,loaded,shoot,draw):
+	starttime = start
+	loadedtime = loaded
+	shoottime = shoot
+	drawtime = draw
+	print(start, loaded, shoot, draw)
+
+
+func _on_tree_exited():
+	weapon.disconnect("update_timers", update_timers)
+	weapon.disconnect("animate",animate)

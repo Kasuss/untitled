@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="WeaponDefaults" load_steps=2 format=3 uid="uid://dbqv0p1cuv4bi"]
+
+[ext_resource type="Script" path="res://Resources/weapon_manager.gd" id="1_gtrmd"]
+
+[resource]
+script = ExtResource("1_gtrmd")
+Name = "DBPShotgun"
+WeaponType = "Shotgun"
+AmmoType = "Heavy"
+AmmoCap = 6
+LoadedAmmo = 6
+Damage = 3
+AmmoIncrement = 2
+Draw = "Anim/draw"
+Idle = "Anim/idle"
+Walk = "Anim/walk"
+Shoot = "Anim/shoot"
+Shoot2 = "Anim/shoot2"
+Reload = "Anim/reload"
+CanShoot = 0.4
+DrawTime = 0.867
+StartLoading = 0.267
+AmmoLoaded = 0.75

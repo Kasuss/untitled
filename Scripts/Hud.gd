@@ -1,4 +1,8 @@
-extends Control
+extends CanvasLayer
 
-func _process(delta):
-	size = get_viewport_rect().size
+@onready var ammo = %Ammo
+
+
+func _on_weapon_update_ammo(_mag, _reserves):
+	ammo.text = str(_mag) + " / " + str(_reserves)
+	pass 
