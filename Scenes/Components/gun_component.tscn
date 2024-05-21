@@ -4,5 +4,3 @@
 
 [node name="GunComponent" type="Node3D"]
 script = ExtResource("1_r1k2b")
-
-[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]

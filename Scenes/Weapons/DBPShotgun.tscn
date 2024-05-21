@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cyamia16myh5l"]
+[gd_scene load_steps=35 format=3 uid="uid://cyamia16myh5l"]
 
 [ext_resource type="Texture2D" uid="uid://qdolrpjesk81" path="res://Imports/Animations/weapon_animations_Material Base Color.png" id="2_mhn32"]
 [ext_resource type="Texture2D" uid="uid://b5bhm2hqgpnif" path="res://Imports/Animations/weapon_animations_bayerMatrix.png" id="3_4g1r1"]
@@ -409,6 +409,9 @@ _data = {
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fkk74"]
 animation = &"Anim/idle"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_14vn1"]
+animation = &"Anim/idle"
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5ihfb"]
 animation = &"Anim/walk"
 
@@ -425,14 +428,28 @@ advance_condition = &"idle"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4bxrn"]
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gcy0v"]
+advance_mode = 2
+advance_condition = &"in_air"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dxtiu"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_oioeu"]
+advance_mode = 2
+advance_condition = &"in_air"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_r28w6"]
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_a7l6m"]
 states/End/position = Vector2(1118, 52)
 states/Idle/node = SubResource("AnimationNodeAnimation_fkk74")
 states/Idle/position = Vector2(327, 52)
+"states/In Air/node" = SubResource("AnimationNodeAnimation_14vn1")
+"states/In Air/position" = Vector2(396, -45)
 states/Start/position = Vector2(34, 52)
 states/Walking/node = SubResource("AnimationNodeAnimation_5ihfb")
 states/Walking/position = Vector2(479, 52)
-transitions = ["Idle", "Walking", SubResource("AnimationNodeStateMachineTransition_rc2je"), "Walking", "Idle", SubResource("AnimationNodeStateMachineTransition_nmunp"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_4bxrn")]
+transitions = ["Idle", "Walking", SubResource("AnimationNodeStateMachineTransition_rc2je"), "Walking", "Idle", SubResource("AnimationNodeStateMachineTransition_nmunp"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_4bxrn"), "Idle", "In Air", SubResource("AnimationNodeStateMachineTransition_gcy0v"), "In Air", "Idle", SubResource("AnimationNodeStateMachineTransition_dxtiu"), "Walking", "In Air", SubResource("AnimationNodeStateMachineTransition_oioeu"), "In Air", "Walking", SubResource("AnimationNodeStateMachineTransition_r28w6")]
 graph_offset = Vector2(-36, -81)
 
 [node name="DBPShotgun" type="Node3D"]
@@ -875,6 +892,7 @@ libraries = {
 tree_root = SubResource("AnimationNodeStateMachine_a7l6m")
 anim_player = NodePath("../Animation")
 parameters/conditions/idle = false
+parameters/conditions/in_air = false
 parameters/conditions/walking = false
 
 [node name="Animation" type="AnimationPlayer" parent="."]

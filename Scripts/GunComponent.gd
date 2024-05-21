@@ -11,6 +11,7 @@ signal finished
 var idle = "parameters/conditions/idle"
 var walking = "parameters/conditions/walking"
 var animations = Anim.animations
+var inair = false
 
 var loadedtime
 var shoottime
@@ -21,7 +22,8 @@ func _ready():
 	animationtree.active = false
 	weapon.connect("update_timers", update_timers)
 	weapon.connect("animate",animate)
-	
+	player.connect("in_air",in_air)
+		
 func _physics_process(_delta):
 	if animationtree.active == false:
 		return
@@ -31,6 +33,10 @@ func _physics_process(_delta):
 	else:
 		animationtree[walking] = true
 		animationtree[idle] = false
+		
+func in_air(_air):
+	inair = _air
+	
 		
 func animate(animation, loops):
 	animationtree.active = false
@@ -68,8 +74,3 @@ func update_timers(start,loaded,shoot,draw):
 	shoottime = shoot
 	drawtime = draw
 	print(start, loaded, shoot, draw)
-
-
-func _on_tree_exited():
-	weapon.disconnect("update_timers", update_timers)
-	weapon.disconnect("animate",animate)

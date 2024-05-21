@@ -3,6 +3,8 @@ extends CharacterBody3D
 @onready var camera = %Camera3D
 @onready var head = $Head
 
+signal in_air(air)
+
 ##State
 var slidejumping = false
 var sliding = false
@@ -28,6 +30,7 @@ const FOV_CHANGE = 0.3
 var gravity = 9.8
 
 # head bob
+const ROTATION_SPEED = -0.5
 const BOB_FREQ = 0.0
 const BOB_AMP = 0.04
 var t_bob = 0.0
@@ -54,19 +57,14 @@ func _unhandled_input(event):
 	if event is InputEventMouseMotion:
 		head.rotate_y(-event.relative.x * SENSITIVITY)
 		camera.rotate_x(-event.relative.y * SENSITIVITY)
-		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-40), deg_to_rad(60))
+		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(70))
 
-
-
-@warning_ignore("shadowed_variable")
-func animate(gun_node, action):
-	var node : GunComponent = gun_node
-	var animating = Animate.new()
-	if node == null:
-		return
-	return node.animation(animating, action)
 
 func _physics_process(delta):
+	if not is_on_floor():
+		in_air.emit(true)
+	else:
+		in_air.emit(false)
 	if dash:
 		dashing(delta)
 		dash_cd -= delta
@@ -100,9 +98,13 @@ func mobility(delta):
 		if direction:
 			velocity.x = lerp(velocity.x, direction.x * speed, delta * 12.0)
 			velocity.z = lerp(velocity.z, direction.z * speed, delta * 12.0)
+			head.rotation.x = lerp(0.0,clamp(velocity.z,deg_to_rad(-5),deg_to_rad(5)),delta * 2.0)
+			camera.rotation.z = lerp(0.0,clamp(-velocity.x,deg_to_rad(-5),deg_to_rad(5)),delta * 2.0)
 		else:
 			velocity.x = 0
 			velocity.z = 0
+			head.rotation.x = 0
+			camera.rotation.z = 0
 	else:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
@@ -114,6 +116,9 @@ func mobility(delta):
 	var velocity_clamped = clamp(velocity.length(), 0.5, DASH_SPEED * 2)
 	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
 	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
+	
+	
+	
 	
 func slide(delta):
 	move_and_slide()
@@ -136,6 +141,7 @@ func slide(delta):
 	var velocity_clamped = clamp(velocity.length(), 0.5, SLIDE_SPEED * 2)
 	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
 	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
+	
 	
 func dashing(delta):
 	move_and_slide()
