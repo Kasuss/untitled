@@ -46,10 +46,14 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed("weapon 1"):
+		if inventory.is_empty():
+			return
 		if equipped == all_weapons[inventory[0]]:
 			return
 		update_equip(0)
 	if event.is_action_pressed("weapon 2"):
+		if inventory.size() <= 1:
+			return
 		if equipped == all_weapons[inventory[1]]:
 			return
 		update_equip(1)
@@ -105,7 +109,6 @@ func reload():
 	if equipped.AmmoIncrement > 0:
 		var loops = ceilf(float(equipped.AmmoCap - equipped.LoadedAmmo) / equipped.AmmoIncrement)
 		animate.emit(5,loops)
-		print (loops)
 		await get_tree().create_timer(equipped.AmmoLoaded).timeout
 		while loops > 0:
 			reserves[equipped.AmmoType] -= min(equipped.AmmoIncrement,equipped.AmmoCap-equipped.LoadedAmmo)
@@ -125,6 +128,14 @@ func reload():
 
 func ammo_update():
 	update_ammo.emit(equipped.LoadedAmmo, reserves[equipped.AmmoType])
+
+	
+
+func pickup_item(item):
+	if inventory.has(item):
+		print("nuh uh")
+		return
+	inventory.push_back(item.Name)
 
 func update_equip(slot):
 	var spawned = get_child_count()
@@ -149,7 +160,6 @@ func update_equip(slot):
 func finished():
 	can_shoot = true
 	ammo_update()
-	print("finished")
 
 func _on_camera_control_animation_finished(anim_name):
 	if anim_name == "sheathe":

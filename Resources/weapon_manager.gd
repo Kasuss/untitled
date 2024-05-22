@@ -12,6 +12,7 @@ signal update_stats
 @export var LoadedAmmo: int
 @export var Damage: int
 @export var AmmoIncrement: int
+@export_enum("Common:60","Rare:25","Epic:15") var Rarity: int
 
 @export_category("Animations")
 @export var Draw: String

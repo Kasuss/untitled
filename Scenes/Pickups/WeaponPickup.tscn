@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://chqy5081pejvy"]
+
+[ext_resource type="Script" path="res://Scripts/WeaponPickup.gd" id="1_3bo4v"]
+[ext_resource type="Script" path="res://Resources/weapon_list.gd" id="2_6lf5l"]
+[ext_resource type="Resource" uid="uid://qw070jtfx7jn" path="res://Resources/Weapons/Pistol.tres" id="3_ngwt0"]
+[ext_resource type="Resource" uid="uid://dbqv0p1cuv4bi" path="res://Resources/Weapons/DBPShotgun.tres" id="4_itsry"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_iguna"]
+radius = 0.842804
+
+[node name="Pickup" type="Area3D" groups=["Pickup"]]
+collision_layer = 256
+script = ExtResource("1_3bo4v")
+preset_path = "DBPShotgun.tres"
+all_weapons = Array[String](["Pistol", "DBPShotgun"])
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_iguna")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+
+[node name="WeaponList" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_6lf5l")
+guns = Array[Resource]([ExtResource("4_itsry"), ExtResource("3_ngwt0")])
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

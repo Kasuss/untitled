@@ -11,6 +11,7 @@ AmmoCap = 6
 LoadedAmmo = 6
 Damage = 3
 AmmoIncrement = 2
+Rarity = 25
 Draw = "Anim/draw"
 Idle = "Anim/idle"
 Walk = "Anim/walk"

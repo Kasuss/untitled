@@ -2,6 +2,7 @@ extends CharacterBody3D
 
 @onready var camera = %Camera3D
 @onready var head = $Head
+@onready var root = get_tree().get_root()
 
 signal in_air(air)
 
@@ -42,6 +43,8 @@ func _input(event):
 	var movement = Input.get_vector("left", "right", "up", "down")
 		
 	if event.is_action_pressed("slide") and not sliding:
+		if not is_on_floor():
+			return
 		sliding = true
 		sliding_direction = (head.transform.basis * Vector3(movement.x, 0, movement.y)).normalized()
 		speed = SLIDE_SPEED
@@ -58,7 +61,6 @@ func _unhandled_input(event):
 		head.rotate_y(-event.relative.x * SENSITIVITY)
 		camera.rotate_x(-event.relative.y * SENSITIVITY)
 		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(70))
-
 
 func _physics_process(delta):
 	if not is_on_floor():
@@ -98,13 +100,13 @@ func mobility(delta):
 		if direction:
 			velocity.x = lerp(velocity.x, direction.x * speed, delta * 12.0)
 			velocity.z = lerp(velocity.z, direction.z * speed, delta * 12.0)
-			head.rotation.x = lerp(0.0,clamp(velocity.z,deg_to_rad(-5),deg_to_rad(5)),delta * 2.0)
-			camera.rotation.z = lerp(0.0,clamp(-velocity.x,deg_to_rad(-5),deg_to_rad(5)),delta * 2.0)
+			head.rotation.x = lerp(0.0,clamp(velocity.z*2,deg_to_rad(-10),deg_to_rad(10)),delta)
+			camera.rotation.z = lerp(0.0,clamp(-velocity.x*2,deg_to_rad(-10),deg_to_rad(10)),delta)
 		else:
 			velocity.x = 0
 			velocity.z = 0
-			head.rotation.x = 0
-			camera.rotation.z = 0
+			head.rotation.x = lerp(head.rotation.x,0.0,delta)
+			camera.rotation.z = lerp(camera.rotation.z,0.0,delta)
 	else:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
@@ -164,7 +166,9 @@ func _headbob(time) -> Vector3:
 	pos.x = cos(time*BOB_FREQ / 2) * BOB_AMP
 	return pos
 
-func update_animation():
+func _on_hitbox_component_area_entered(area):
+	if not area.is_in_group("Pickup"):
+		return
+	var drop = await area.give_item()
+	%Weapons.pickup_item(drop)
 	
-	pass
-

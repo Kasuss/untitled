@@ -58,7 +58,6 @@ func loop_animation(loops):
 	loops -= 1
 	await get_tree().create_timer(loadedtime).timeout
 	while loops != 0:
-		print(loops)
 		animator.seek(starttime)
 		await get_tree().create_timer(loadedtime-starttime).timeout
 		loops -= 1
@@ -73,4 +72,3 @@ func update_timers(start,loaded,shoot,draw):
 	loadedtime = loaded
 	shoottime = shoot
 	drawtime = draw
-	print(start, loaded, shoot, draw)

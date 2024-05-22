@@ -20,35 +20,6 @@ outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jrcsa"]
 
-[sub_resource type="Animation" id="Animation_u8xd4"]
-resource_name = "sheathe"
-length = 0.16667
-step = 0.0333333
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Head/Camera3D/Pivot:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.166667),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(-0.04, -0.095, 0.265), Vector3(-0.04, -1.855, 0.265)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Head/Camera3D/Pivot:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.166667),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(-1.5708, 0, 0)]
-}
-
 [sub_resource type="Animation" id="Animation_ig6wb"]
 resource_name = "RESET"
 loop_mode = 1
@@ -78,13 +49,43 @@ tracks/1/keys = {
 "values": [Vector3(0, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_u8xd4"]
+resource_name = "sheathe"
+length = 0.16667
+step = 0.0333333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Head/Camera3D/Pivot:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.166667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.04, -0.095, 0.265), Vector3(-0.04, -1.855, 0.265)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Head/Camera3D/Pivot:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.166667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-1.5708, 0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_hnxyu"]
 _data = {
 "RESET": SubResource("Animation_ig6wb"),
 "sheathe": SubResource("Animation_u8xd4")
 }
 
-[node name="player" type="CharacterBody3D"]
+[node name="player" type="CharacterBody3D" groups=["Player"]]
+collision_mask = 257
 up_direction = Vector3(0, -1, 0)
 script = ExtResource("1_tn7hv")
 
@@ -141,27 +142,24 @@ gizmo_extents = 0.5
 
 [node name="Weapons" type="Node3D" parent="Head/Camera3D/Pivot"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("5_lk4yc")
 weapons = Array[Resource("res://Resources/weapon_manager.gd")]([ExtResource("6_dog5w"), ExtResource("7_6cmj7")])
-startwep = Array[String](["DBPShotgun", "Pistol"])
 Light = 100
 Medium = 50
 Heavy = 25
 
-[node name="Raycasts" type="Node3D" parent="Head/Camera3D"]
+[node name="hitscan" type="RayCast3D" parent="Head/Camera3D"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, -0.095, 0.265)
-
-[node name="hitscan" type="RayCast3D" parent="Head/Camera3D/Raycasts"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0.095, -0.265)
 enabled = false
 target_position = Vector3(0, 0, -100)
 collision_mask = 2
 hit_from_inside = true
 collide_with_areas = true
 debug_shape_custom_color = Color(0, 0.65098, 0.0627451, 1)
+
+[node name="Raycasts" type="Node3D" parent="Head/Camera3D"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, -0.095, 0.265)
 
 [node name="hitscan2" type="RayCast3D" parent="Head/Camera3D/Raycasts"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0.095, -0.265)
@@ -208,6 +206,15 @@ hit_from_inside = true
 collide_with_areas = true
 debug_shape_custom_color = Color(0, 0.65098, 0.0627451, 1)
 
+[node name="hitscan7" type="RayCast3D" parent="Head/Camera3D/Raycasts"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0.095, -0.265)
+enabled = false
+target_position = Vector3(0, 0, -100)
+collision_mask = 2
+hit_from_inside = true
+collide_with_areas = true
+debug_shape_custom_color = Color(0, 0.65098, 0.0627451, 1)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_jrcsa")
 
@@ -219,7 +226,9 @@ libraries = {
 
 [node name="DamageComponent" type="Node3D" parent="."]
 
-[node name="HitboxComponent" parent="." instance=ExtResource("5_l30iv")]
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") groups=["Player"] instance=ExtResource("5_l30iv")]
+collision_mask = 257
+health_component = NodePath("../HealthComponent")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="HitboxComponent"]
 shape = SubResource("CapsuleShape3D_jrcsa")
@@ -228,3 +237,4 @@ shape = SubResource("CapsuleShape3D_jrcsa")
 
 [connection signal="update_ammo" from="Head/Camera3D/Pivot/Weapons" to="UI" method="_on_weapon_update_ammo"]
 [connection signal="animation_finished" from="CameraControl" to="Head/Camera3D/Pivot/Weapons" method="_on_camera_control_animation_finished"]
+[connection signal="area_entered" from="HitboxComponent" to="." method="_on_hitbox_component_area_entered"]
