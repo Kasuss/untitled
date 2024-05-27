@@ -26,8 +26,9 @@ var all_weapons:Dictionary = {}
 @export var Light: int
 @export var Medium: int
 @export var Heavy: int
-
+@export var reserves_max:Dictionary
 var reserves:Dictionary 
+
 
 var equipped: WeaponDefaults = null
 
@@ -43,19 +44,25 @@ func _ready():
 	"Medium":Medium,
 	"Heavy":Heavy
 	}
+	
 
 func _input(event):
+	var spawned = get_child_count()
 	if event.is_action_pressed("weapon 1"):
 		if inventory.is_empty():
 			return
 		if equipped == all_weapons[inventory[0]]:
 			return
+		if spawned > 1:
+			get_child(1).queue_free()
 		update_equip(0)
 	if event.is_action_pressed("weapon 2"):
 		if inventory.size() <= 1:
 			return
 		if equipped == all_weapons[inventory[1]]:
 			return
+		if spawned > 1:
+			get_child(1).queue_free()
 		update_equip(1)
 		
 	if event.is_action_pressed("shoot") and equipped.LoadedAmmo > 0:
@@ -70,18 +77,18 @@ func shoot():
 	if can_shoot == false:
 		return
 	
-	if equipped.WeaponType == "Pistol":
+	if equipped.Type == "Pistol":
 		target.force_raycast_update()
 		if target.is_colliding() == null:
 			return
 		if target.is_colliding() and target.get_collider().is_in_group("Hitbox"):
 			target.get_collider().damage(equipped.Damage, 1)
 			damage.emit(equipped.Damage, 1)
-		elif target.get_collider().is_in_group("Headbox"):
+		elif target.is_colliding() and target.get_collider().is_in_group("Headbox"):
 			target.get_collider().damage(equipped.Damage, 2)
 			damage.emit(equipped.Damage, 2)
 
-	if equipped.WeaponType == "Shotgun":
+	if equipped.Type == "Shotgun":
 		for r in raycasts.get_children():
 			r.force_raycast_update()
 			r.target_position.x = randf_range(spread,-spread)
@@ -91,7 +98,7 @@ func shoot():
 			if r.is_colliding() and r.get_collider().is_in_group("Hitbox"):
 				r.get_collider().damage(equipped.Damage, 1)
 				damage.emit(equipped.Damage, 1)
-			elif r.get_collider().is_in_group("Headbox"):
+			elif r.is_colliding() and r.get_collider().is_in_group("Headbox"):
 				r.get_collider().damage(equipped.Damage, 2)
 				damage.emit(equipped.Damage, 2)
 	
@@ -127,23 +134,36 @@ func reload():
 		
 
 func ammo_update():
+	if equipped == null:
+		return
 	update_ammo.emit(equipped.LoadedAmmo, reserves[equipped.AmmoType])
 
 	
 
 func pickup_item(item):
+	if item == null:
+		return 
+	if item.Type == "Ammo":
+		var ammo_give = int(round(float(reserves_max[item.Name] / 10)))
+		if ammo_give + reserves[item.Name] > reserves_max[item.Name]:
+			while reserves[item.Name] < reserves_max[item.Name]:
+				reserves[item.Name] += 1
+		else:
+			reserves[item.Name] += ammo_give
+		print(ammo_give)
+		ammo_update()
+		return
 	if inventory.has(item):
 		print("nuh uh")
 		return
 	inventory.push_back(item.Name)
 
 func update_equip(slot):
-	var spawned = get_child_count()
 	camera.play("sheathe")
 	await get_tree().create_timer(camera.current_animation_length).timeout
-	if spawned:
-		%Weapons.get_child(0).queue_free()
-		await get_tree().create_timer(0.1).timeout
+	if get_child_count() > 0:
+		get_child(0).queue_free()
+	await get_tree().process_frame
 	var equipping = load("res://Scenes/Weapons/" + str(inventory[slot]) + ".tscn")
 	var weapon = equipping.instantiate()
 	add_child(weapon)

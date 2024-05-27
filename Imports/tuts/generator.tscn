@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://ntpa51vk524b"]
+
+[ext_resource type="Script" path="res://Imports/tuts/generator.gd" id="1_aqi4f"]
+
+[node name="Generator" type="RigidBody2D"]
+lock_rotation = true
+script = ExtResource("1_aqi4f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true

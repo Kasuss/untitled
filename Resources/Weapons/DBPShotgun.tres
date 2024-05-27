@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_gtrmd")
 Name = "DBPShotgun"
-WeaponType = "Shotgun"
+Type = "Shotgun"
 AmmoType = "Heavy"
 AmmoCap = 6
 LoadedAmmo = 6

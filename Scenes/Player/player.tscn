@@ -147,6 +147,11 @@ weapons = Array[Resource("res://Resources/weapon_manager.gd")]([ExtResource("6_d
 Light = 100
 Medium = 50
 Heavy = 25
+reserves_max = {
+"Heavy": 100,
+"Light": 300,
+"Medium": 200
+}
 
 [node name="hitscan" type="RayCast3D" parent="Head/Camera3D"]
 unique_name_in_owner = true

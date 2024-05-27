@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Pickups" load_steps=3 format=3 uid="uid://dag41lquyitis"]
+
+[ext_resource type="Script" path="res://Resources/pickup_list.gd" id="1_17mf7"]
+[ext_resource type="PackedScene" uid="uid://b3nv0031y5kk6" path="res://Scenes/Pickups/AmmoBox.tscn" id="1_w1jq0"]
+
+[resource]
+script = ExtResource("1_17mf7")
+Name = "Medium"
+Type = "Ammo"
+Rarity = 60
+BoxColor = Color(0.266667, 0.666667, 0.780392, 1)
+AmmoScene = ExtResource("1_w1jq0")
+AttachmentStatBuff = 0.0
+BuffType = ""
+StatIncrease = 0.0

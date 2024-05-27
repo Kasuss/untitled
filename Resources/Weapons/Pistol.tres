@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_oqxmi")
 Name = "Pistol"
-WeaponType = "Pistol"
+Type = "Pistol"
 AmmoType = "Light"
 AmmoCap = 20
 LoadedAmmo = 20

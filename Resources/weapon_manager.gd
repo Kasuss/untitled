@@ -6,7 +6,7 @@ signal update_stats
 
 @export_category("Weapon Stats")
 @export var Name: String
-@export_enum("Pistol","Shotgun") var WeaponType: String
+@export_enum("Pistol","Shotgun") var Type: String
 @export_enum("Light","Medium","Heavy") var AmmoType: String
 @export var AmmoCap: int
 @export var LoadedAmmo: int

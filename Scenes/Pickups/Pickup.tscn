@@ -1,0 +1,99 @@
+[gd_scene load_steps=12 format=3 uid="uid://chqy5081pejvy"]
+
+[ext_resource type="Script" path="res://Scripts/WeaponPickup.gd" id="1_3bo4v"]
+[ext_resource type="Script" path="res://Resources/weapon_list.gd" id="2_6lf5l"]
+[ext_resource type="Resource" uid="uid://qw070jtfx7jn" path="res://Resources/Weapons/Pistol.tres" id="3_ngwt0"]
+[ext_resource type="Resource" uid="uid://dbqv0p1cuv4bi" path="res://Resources/Weapons/DBPShotgun.tres" id="4_itsry"]
+[ext_resource type="Resource" uid="uid://jqpvp4pqndsx" path="res://Resources/Pickups/LightAmmo.tres" id="5_gyicw"]
+[ext_resource type="Resource" uid="uid://dag41lquyitis" path="res://Resources/Pickups/MediumAmmo.tres" id="6_lymef"]
+[ext_resource type="Resource" uid="uid://y2nbanebch56" path="res://Resources/Pickups/HeavyAmmo.tres" id="7_hmd0m"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_iguna"]
+radius = 0.842804
+
+[sub_resource type="Animation" id="Animation_ufaw4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Model:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Model:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ljuyn"]
+resource_name = "rotate"
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Model:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.05, 0), Vector3(0, 0.05, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Model:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_osc4h"]
+_data = {
+"RESET": SubResource("Animation_ufaw4"),
+"rotate": SubResource("Animation_ljuyn")
+}
+
+[node name="Pickup" type="Area3D" groups=["Pickup"]]
+collision_layer = 256
+script = ExtResource("1_3bo4v")
+all_weapons = Array[String](["Pistol", "DBPShotgun"])
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_iguna")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+
+[node name="WeaponList" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_6lf5l")
+guns = Array[Resource]([ExtResource("4_itsry"), ExtResource("3_ngwt0")])
+pickups = Array[Resource]([ExtResource("5_gyicw"), ExtResource("6_lymef"), ExtResource("7_hmd0m")])
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_osc4h")
+}
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

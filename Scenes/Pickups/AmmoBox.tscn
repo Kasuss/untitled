@@ -1,0 +1,89 @@
+[gd_scene load_steps=7 format=3 uid="uid://b3nv0031y5kk6"]
+
+[ext_resource type="Script" path="res://Scenes/Pickups/AmmoBox.gd" id="1_br4h0"]
+[ext_resource type="ArrayMesh" uid="uid://bxtyl5y2g4y0l" path="res://Models/Pickups/Ammo.tres" id="1_hv5bp"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_a6uin"]
+
+[sub_resource type="Animation" id="Animation_ufaw4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Model:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Model:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ljuyn"]
+resource_name = "rotate"
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Model:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.05, 0), Vector3(0, 0.05, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Model:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_osc4h"]
+_data = {
+"RESET": SubResource("Animation_ufaw4"),
+"rotate": SubResource("Animation_ljuyn")
+}
+
+[node name="AmmoBox" type="Node3D" groups=["Ammo"]]
+script = ExtResource("1_br4h0")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+mesh = ExtResource("1_hv5bp")
+skeleton = NodePath("")
+
+[node name="Pickup" type="Area3D" parent="." groups=["Ammo"]]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pickup"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+shape = SubResource("SphereShape3D_a6uin")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_osc4h")
+}

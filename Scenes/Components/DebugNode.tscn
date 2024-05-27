@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cut25ylppggj3"]
+
+[ext_resource type="Script" path="res://Scenes/Components/DebugNode.gd" id="1_ev5ql"]
+
+[node name="DebugNode" type="Node3D"]
+script = ExtResource("1_ev5ql")
