@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cx4y658vvqbdy" path="res://Scenes/Components/health_component.tscn" id="1_chorv"]
 [ext_resource type="PackedScene" uid="uid://qunglynxovun" path="res://Scenes/Components/headbox_component.tscn" id="2_3bqnc"]
 [ext_resource type="PackedScene" uid="uid://cnm16hqcv8nsk" path="res://Scenes/Components/hitbox_component.tscn" id="2_yrpw1"]
-[ext_resource type="PackedScene" uid="uid://tdyq2xtygwyi" path="res://Scenes/Components/hitmarker_component.tscn" id="4_jpbyx"]
+[ext_resource type="Script" path="res://Scenes/Components/hitmarker_component.gd" id="3_u2wtu"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wa8hr"]
 radius = 0.25
@@ -50,9 +50,9 @@ MAX_HEALTH = 40.0
 
 [node name="Components" type="Node3D" parent="."]
 
-[node name="HitmarkerComponent" parent="Components" node_paths=PackedStringArray("spawn") instance=ExtResource("4_jpbyx")]
+[node name="HitmarkerComponent" type="Node3D" parent="Components"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.32, 0)
-spawn = NodePath(".")
+script = ExtResource("3_u2wtu")
 
 [node name="HitboxComponent" parent="Components" node_paths=PackedStringArray("health_component") instance=ExtResource("2_yrpw1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

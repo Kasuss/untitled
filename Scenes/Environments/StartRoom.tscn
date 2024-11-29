@@ -3,7 +3,7 @@
 [ext_resource type="MeshLibrary" uid="uid://0yvmodfwlqo" path="res://Scenes/Environments/World1/Dungeon1.tres" id="1_saa3e"]
 [ext_resource type="PackedScene" uid="uid://bo4xu3h0hcojs" path="res://Scenes/Player/player.tscn" id="2_vvgkq"]
 [ext_resource type="PackedScene" uid="uid://chqy5081pejvy" path="res://Scenes/Pickups/Pickup.tscn" id="3_j4y5i"]
-[ext_resource type="PackedScene" uid="uid://cut25ylppggj3" path="res://Scenes/Components/DebugNode.tscn" id="4_ko2ie"]
+[ext_resource type="PackedScene" uid="uid://cut25ylppggj3" path="res://Scenes/Debug/DebugNode.tscn" id="4_ko2ie"]
 [ext_resource type="PackedScene" uid="uid://j1w7bkvy0cf8" path="res://Scenes/NPCs/enemy.tscn" id="5_aj5lx"]
 
 [node name="world" type="Node3D"]

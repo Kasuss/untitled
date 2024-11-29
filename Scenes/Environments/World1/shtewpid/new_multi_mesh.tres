@@ -1,0 +1,6 @@
+[gd_resource type="MultiMesh" format=3 uid="uid://chkrbrh1lxfua"]
+
+[resource]
+transform_format = 1
+instance_count = 2
+buffer = PackedFloat32Array(0, 1.96182e-44, 1.4013e-45, 0, 2.10195e-44, 1.96182e-44, 1.4013e-45, 1.82169e-44, 2.8026e-45, 1.4013e-45, 1.96182e-44, 1.82169e-44, 2.8026e-45, 1.68156e-44, 4.2039e-45, 2.8026e-45, 1.82169e-44, 1.68156e-44, 4.2039e-45, 1.54143e-44, 5.60519e-45, 4.2039e-45, 1.68156e-44, 1.54143e-44)

@@ -19,6 +19,7 @@ Shoot = "Anim/shoot"
 Shoot2 = ""
 Reload = "Anim/reload"
 CanShoot = 0.2
+CanShoot2 = 0.2
 DrawTime = 0.9
 StartLoading = 0.0
 AmmoLoaded = 1.4

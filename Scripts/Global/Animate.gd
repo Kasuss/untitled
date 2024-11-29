@@ -9,4 +9,3 @@ var animations = {
 	4: "Anim/shoot2",
 	5: "Anim/reload"
 }
-

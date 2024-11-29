@@ -1,0 +1,12 @@
+[gd_resource type="BoxMesh" load_steps=3 format=3 uid="uid://djqt0k2dsdva8"]
+
+[ext_resource type="Texture2D" uid="uid://g8xtuxug8rht" path="res://Textures/brick3.png" id="1_fwvh5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kexlw"]
+albedo_texture = ExtResource("1_fwvh5")
+uv1_triplanar = true
+
+[resource]
+lightmap_size_hint = Vector2i(284, 166)
+material = SubResource("StandardMaterial3D_kexlw")
+size = Vector3(28, 2, 28)

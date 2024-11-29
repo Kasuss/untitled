@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bo4xu3h0hcojs"]
+[gd_scene load_steps=17 format=3 uid="uid://bo4xu3h0hcojs"]
 
 [ext_resource type="Texture2D" uid="uid://dfrs6qakpp3m4" path="res://Textures/UI/crosshair.png" id="1_bq2g6"]
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_tn7hv"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cnm16hqcv8nsk" path="res://Scenes/Components/hitbox_component.tscn" id="5_l30iv"]
 [ext_resource type="Script" path="res://Scripts/Weapons.gd" id="5_lk4yc"]
 [ext_resource type="Resource" uid="uid://qw070jtfx7jn" path="res://Resources/Weapons/Pistol.tres" id="6_dog5w"]
+[ext_resource type="Script" path="res://Resources/weapon_manager.gd" id="6_gpuqy"]
 [ext_resource type="PackedScene" uid="uid://cx4y658vvqbdy" path="res://Scenes/Components/health_component.tscn" id="6_rg2e4"]
 [ext_resource type="Resource" uid="uid://dbqv0p1cuv4bi" path="res://Resources/Weapons/DBPShotgun.tres" id="7_6cmj7"]
 
@@ -143,7 +144,8 @@ gizmo_extents = 0.5
 [node name="Weapons" type="Node3D" parent="Head/Camera3D/Pivot"]
 unique_name_in_owner = true
 script = ExtResource("5_lk4yc")
-weapons = Array[Resource("res://Resources/weapon_manager.gd")]([ExtResource("6_dog5w"), ExtResource("7_6cmj7")])
+weapons = Array[ExtResource("6_gpuqy")]([ExtResource("6_dog5w"), ExtResource("7_6cmj7")])
+startwep = Array[String](["Pistol", "DBPShotgun"])
 Light = 100
 Medium = 50
 Heavy = 25

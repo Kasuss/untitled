@@ -15,14 +15,16 @@ var inair = false
 
 var loadedtime
 var shoottime
+var shoot2time
 var drawtime
 var starttime
+
 
 func _ready():
 	animationtree.active = false
 	weapon.connect("update_timers", update_timers)
 	weapon.connect("animate",animate)
-	player.connect("in_air",in_air)
+	#player.connect("in_air",in_air)
 		
 func _physics_process(_delta):
 	if animationtree.active == false:
@@ -34,8 +36,8 @@ func _physics_process(_delta):
 		animationtree[walking] = true
 		animationtree[idle] = false
 		
-func in_air(_air):
-	inair = _air
+#func in_air(_air):
+	#inair = _air
 	
 		
 func animate(animation, loops):
@@ -48,10 +50,14 @@ func animate(animation, loops):
 	if animation == 0:
 		await get_tree().create_timer(drawtime).timeout
 		finished.emit()
-	if animation == 3:
+	if animation == 3 or 4:
 		if animator.current_animation == animations[3]:
 			animator.seek(0)
-		await get_tree().create_timer(shoottime).timeout
+			await get_tree().create_timer(shoottime).timeout
+		elif animator.current_animation == animations[4]:
+			animator.seek(0)
+			await get_tree().create_timer(shoot2time).timeout
+
 		finished.emit()
 
 func loop_animation(loops):
@@ -64,11 +70,13 @@ func loop_animation(loops):
 		finished.emit()
 
 func _on_animation_animation_finished(anim_name):
-	if anim_name == animations[0] or animations[3] or animations[4] or animations[5]:
+	if anim_name != animations[1] or animations[2]:
 		animationtree.active = true
 		
-func update_timers(start,loaded,shoot,draw):
+func update_timers(start,loaded,shoot,draw,shoot2):
 	starttime = start
 	loadedtime = loaded
 	shoottime = shoot
 	drawtime = draw
+	shoot2time = shoot2
+	

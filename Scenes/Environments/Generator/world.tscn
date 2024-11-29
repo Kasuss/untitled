@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://buirlqrps11y8"]
+
+[ext_resource type="Script" path="res://Scenes/Environments/Generator/world.gd" id="1_x5eqn"]
+[ext_resource type="PackedScene" uid="uid://bedn7ush3qg2y" path="res://Scenes/Environments/Generator/main.tscn" id="2_qriws"]
+[ext_resource type="Script" path="res://Scenes/Environments/Generator/map.gd" id="2_rmcai"]
+[ext_resource type="PackedScene" uid="uid://bo4xu3h0hcojs" path="res://Scenes/Player/player.tscn" id="3_b3nxk"]
+
+[sub_resource type="MeshLibrary" id="MeshLibrary_ofbrs"]
+item/0/name = ""
+item/0/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/0/shapes = []
+item/0/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/0/navigation_layers = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kchpm"]
+
+[node name="world" type="Node3D"]
+script = ExtResource("1_x5eqn")
+Map = ExtResource("2_qriws")
+
+[node name="Rooms" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_rmcai")
+
+[node name="GridMap" type="GridMap" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 16)
+mesh_library = SubResource("MeshLibrary_ofbrs")
+cell_size = Vector3(32, 2, 32)
+data = {
+"cells": PackedInt32Array(2, 65529, 0)
+}
+
+[node name="CollisionShape3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 199.295, 90.9971, 185.693)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CollisionShape3D"]
+shape = SubResource("BoxShape3D_kchpm")
+
+[node name="player" parent="." instance=ExtResource("3_b3nxk")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 199.445, 94.7067, 185.557)
+up_direction = Vector3(0, 1, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.0156899, 0.999877, 0, -0.999877, -0.0156899, 205.031, 129.454, 188.944)
+spot_range = 477.581
+spot_attenuation = 13.35
+spot_angle = 89.99

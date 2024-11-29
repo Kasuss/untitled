@@ -9,17 +9,17 @@ signal in_air(air)
 ##State
 var slidejumping = false
 var sliding = false
-
-##Script Calls
+var dash = false
+var wallriding = false
 
 ##Mobility
-var dash = false
-var dash_cd = 0.3
+
+var dash_cd = 0.0
 var speed
 var dash_direction = Vector3(0,0,0)
 var sliding_direction = Vector3(0,0,0)
-const WALK_SPEED = 10.0
-const DASH_SPEED = 25.0
+const WALK_SPEED = 12.0
+const DASH_SPEED = 50.0
 const SLIDE_SPEED = 25.0
 const CROUCH_SPEED = 3.0
 const JUMP_VELOCITY = 4.5
@@ -41,9 +41,12 @@ func _ready():
 
 func _input(event):
 	var movement = Input.get_vector("left", "right", "up", "down")
+	
+	if Input.is_action_pressed("close"):
+		get_tree().quit()
 		
 	if event.is_action_pressed("slide") and not sliding:
-		if not is_on_floor():
+		if not is_on_floor() or dash:
 			return
 		sliding = true
 		sliding_direction = (head.transform.basis * Vector3(movement.x, 0, movement.y)).normalized()
@@ -51,8 +54,9 @@ func _input(event):
 		camera.transform.origin -= Vector3(0,0.25,0)
 		
 	if event.is_action_pressed("dash") and not dash:
+		if dash_cd > 0:
+			return
 		dash = true
-		dash_cd = 0.3
 		dash_direction = (head.transform.basis * Vector3(movement.x, 0, movement.y)).normalized()
 		speed = DASH_SPEED
 
@@ -67,13 +71,27 @@ func _physics_process(delta):
 		in_air.emit(true)
 	else:
 		in_air.emit(false)
+
 	if dash:
 		dashing(delta)
+	
+	var dash_ended = true
+	if dash_cd > 0 and not dash_ended:
+		if is_on_floor():
+			dash_ended = true
+		else:
+			mobility(delta*2)
+	if dash_cd > 0 and dash_ended:
 		dash_cd -= delta
+	elif dash_cd <= 0:
+		dash_ended = false
+
 	
 	if sliding and is_on_floor():
 		slide(delta)
 	elif not dash:
+		#if is_on_wall():
+			#wallrun(delta)
 		mobility(delta)
 
 
@@ -88,9 +106,6 @@ func mobility(delta):
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
-
-	if Input.is_action_pressed("close"):
-		get_tree().quit()
 
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	var direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -147,13 +162,33 @@ func slide(delta):
 	
 func dashing(delta):
 	move_and_slide()
-	speed -= DASH_SPEED * delta
+	speed -= DASH_SPEED * (delta * 2)
 	velocity.y = 0
 	velocity.x = dash_direction.x * speed
 	velocity.z = dash_direction.z * speed
-	if dash_cd <= 0:
-		dash_cd = 0
+	if speed <= WALK_SPEED:
+		dash_cd = 3
 		dash = false
+	# FOV
+	var velocity_clamped = clamp(velocity.length(), 0.5, DASH_SPEED * 2)
+	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
+	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
+	
+func wallrun(delta):
+	##to be returned to
+	if not is_on_wall():
+		return
+	if Input.is_action_just_pressed("ui_accept"):
+		velocity = (head.transform * speed).normalized()
+		velocity.y = JUMP_VELOCITY
+	move_and_slide()
+	speed -= DASH_SPEED * (delta)
+	velocity.y = 0
+	var input_dir = Input.get_vector("left", "right", "up", "down")
+	var direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	velocity.x = lerp(velocity.x, direction.x * speed, delta * 12.0)
+	velocity.z = lerp(velocity.z, direction.z * speed, delta * 12.0)
+	
 	# FOV
 	var velocity_clamped = clamp(velocity.length(), 0.5, DASH_SPEED * 2)
 	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped

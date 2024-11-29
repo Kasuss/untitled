@@ -27,5 +27,3 @@ func _damage(damage, multiplier):
 	tweene.tween_property(%Text,"offset",drift_location,0.25)
 	tweene.tween_property(%Text,"modulate:a",0,2)
 	tweene.chain().tween_callback(queue_free)
-
-	pass

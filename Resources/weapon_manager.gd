@@ -8,6 +8,7 @@ signal update_stats
 @export var Name: String
 @export_enum("Pistol","Shotgun") var Type: String
 @export_enum("Light","Medium","Heavy") var AmmoType: String
+@export var AltFire: bool
 @export var AmmoCap: int
 @export var LoadedAmmo: int
 @export var Damage: int
@@ -24,6 +25,7 @@ signal update_stats
 
 @export_category("Visual Presets")
 @export var CanShoot: float
+@export var CanShoot2: float
 @export var DrawTime: float
 @export var StartLoading: float
 @export var AmmoLoaded: float

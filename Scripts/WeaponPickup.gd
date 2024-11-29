@@ -10,6 +10,8 @@ const BOX = preload("res://Scenes/Pickups/AmmoBox.tscn")
 		
 
 func _ready():
+	var world = get_tree().current_scene
+	reparent(world)
 	%AnimationPlayer.play("rotate")
 	drop = await list.item_dropped()
 	spawn_item(drop)

@@ -45,6 +45,16 @@ func _ready():
 	"Heavy":Heavy
 	}
 	
+	
+#func _physics_process(delta):
+	#if can_shoot == false and not reloading:
+		#if equipped == null:
+			#return
+		#var time = equipped.CanShoot
+		#time -= delta
+		#if time <= 0:
+			#can_shoot = true
+#	pass
 
 func _input(event):
 	var spawned = get_child_count()
@@ -64,11 +74,17 @@ func _input(event):
 		if spawned > 1:
 			get_child(1).queue_free()
 		update_equip(1)
-		
+	if equipped == null:
+		return
 	if event.is_action_pressed("shoot") and equipped.LoadedAmmo > 0:
 		shoot()
+	
+	if event.is_action_pressed("alt_fire") and equipped.LoadedAmmo > 0:
+		alt_fire()
 		
 	if event.is_action_pressed("reload") and reloading == false:
+		if equipped.LoadedAmmo == equipped.AmmoCap:
+			return
 		reload()
 		
 		
@@ -96,23 +112,60 @@ func shoot():
 			if r.is_colliding() == null:
 				return
 			if r.is_colliding() and r.get_collider().is_in_group("Hitbox"):
-				r.get_collider().damage(equipped.Damage, 1)
-				damage.emit(equipped.Damage, 1)
+					r.get_collider().damage(equipped.Damage, 1)
+					damage.emit(equipped.Damage, 1)
 			elif r.is_colliding() and r.get_collider().is_in_group("Headbox"):
-				r.get_collider().damage(equipped.Damage, 2)
-				damage.emit(equipped.Damage, 2)
+					r.get_collider().damage(equipped.Damage, 2)
+					damage.emit(equipped.Damage, 2)
 	
 	equipped.LoadedAmmo -= 1
 	ammo_update()
-	animate.emit(3, 0)
+	if equipped.Type == "Shotgun" and equipped.LoadedAmmo % 2 == 0:
+		animate.emit(4, 0)
+	else:
+		animate.emit(3, 0)
 	can_shoot = false
+	
+func alt_fire():
+	if can_shoot == false or equipped.AltFire == false:
+		return
+
+	if equipped.Type == "Shotgun":
+		for r in raycasts.get_children():
+			r.force_raycast_update()
+			r.target_position.x = randf_range(spread*1.10,-spread*1.10)
+			r.target_position.y = randf_range(spread*1.10,-spread*1.10)
+			if r.is_colliding() == null:
+				return
+			if r.is_colliding() and r.get_collider().is_in_group("Hitbox"):
+				if equipped.LoadedAmmo > 1: 
+					r.get_collider().damage(equipped.Damage, 2)
+					damage.emit(equipped.Damage, 2)
+				else:
+					r.get_collider().damage(equipped.Damage, 1)
+					damage.emit(equipped.Damage, 1)
+			elif r.is_colliding() and r.get_collider().is_in_group("Headbox"):
+				if equipped.LoadedAmmo > 1:
+					r.get_collider().damage(equipped.Damage, 4)
+					damage.emit(equipped.Damage, 4)
+				else:
+					r.get_collider().damage(equipped.Damage, 2)
+					damage.emit(equipped.Damage, 2)
+		if equipped.LoadedAmmo > 1: equipped.LoadedAmmo -= 2
+		else: equipped.LoadedAmmo -= 1
+		
+		ammo_update()
+		if equipped.LoadedAmmo % 2 == 0:
+			animate.emit(4, 0)
+		else:
+			animate.emit(3, 0)
+		can_shoot = false
 
 func reload():
 	if reserves[equipped.AmmoType] <= 0:
 		return
 	can_shoot = false
 	reloading = true
-	
 	if equipped.AmmoIncrement > 0:
 		var loops = ceilf(float(equipped.AmmoCap - equipped.LoadedAmmo) / equipped.AmmoIncrement)
 		animate.emit(5,loops)
@@ -144,34 +197,40 @@ func pickup_item(item):
 	if item == null:
 		return 
 	if item.Type == "Ammo":
-		var ammo_give = int(round(float(reserves_max[item.Name] / 10)))
-		if ammo_give + reserves[item.Name] > reserves_max[item.Name]:
-			while reserves[item.Name] < reserves_max[item.Name]:
-				reserves[item.Name] += 1
-		else:
-			reserves[item.Name] += ammo_give
-		print(ammo_give)
+		give_ammo(item.Name)
 		ammo_update()
 		return
-	if inventory.has(item):
-		print("nuh uh")
+	if inventory.has(item.Name):
+		give_ammo(item.AmmoType)
+		ammo_update()
 		return
+	print("Giving " + str(item.Name))
 	inventory.push_back(item.Name)
+	
+func give_ammo(ammo):
+	var ammo_give = int(round(float(reserves_max[ammo] / 10)))
+	if ammo_give + reserves[ammo] > reserves_max[ammo]:
+		while reserves[ammo] < reserves_max[ammo]:
+			reserves[ammo] += 1
+	else:
+		reserves[ammo] += ammo_give
 
 func update_equip(slot):
 	camera.play("sheathe")
 	await get_tree().create_timer(camera.current_animation_length).timeout
 	if get_child_count() > 0:
+		gun_node.disconnect("finished", finished)
+		await get_tree().process_frame
 		get_child(0).queue_free()
 	await get_tree().process_frame
+	equipped = all_weapons[inventory[slot]]
+	ammo_update()
 	var equipping = load("res://Scenes/Weapons/" + str(inventory[slot]) + ".tscn")
 	var weapon = equipping.instantiate()
 	add_child(weapon)
 	weapon.global_position = hand.global_position
 	weapon.global_rotation = hand.global_rotation
-	equipped = all_weapons[inventory[slot]]
-	ammo_update()
-	update_timers.emit(equipped.StartLoading,equipped.AmmoLoaded,equipped.CanShoot,equipped.DrawTime)
+	update_timers.emit(equipped.StartLoading,equipped.AmmoLoaded,equipped.CanShoot,equipped.DrawTime,equipped.CanShoot2)
 	gun_node = get_child(0).get_child(0)
 	gun_node.connect("finished",finished)
 	animate.emit(0,0)
