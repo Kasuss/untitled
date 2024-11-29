@@ -33,6 +33,10 @@ gdscript/warnings/shadowed_global_identifier=0
 window/size/viewport_width=1280
 window/size/viewport_height=720
 
+[global_group]
+
+Door="Doorway"
+
 [input]
 
 debug_key={

@@ -32,19 +32,6 @@ albedo_texture = ExtResource("3_vjwdo")
 
 [sub_resource type="GDScript" id="GDScript_gelcq"]
 script/source = "extends CSGBox3D
-class_name Door
-
-func update_faces(cell_list) -> void:
-	@warning_ignore(\"narrowing_conversion\")
-	var my_grid_position = Vector2i(position.x/Global.GRID_SIZE, position.z/2)
-	if cell_list.has(my_grid_position + Vector2i.RIGHT):
-		queue_free()
-	if cell_list.has(my_grid_position + Vector2i.LEFT):
-		queue_free()
-	if cell_list.has(my_grid_position + Vector2i.DOWN):
-		queue_free()
-	if cell_list.has(my_grid_position + Vector2i.UP):
-		queue_free()
 "
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nlxdp"]
@@ -85,18 +72,18 @@ size = Vector3(32, 14.266, 2)
 material = SubResource("StandardMaterial3D_0r2ck")
 
 [node name="openW" type="CSGBox3D" parent="Doors/wall1"]
-transform = Transform3D(1.00001, 0, 0, 0, 1, 0, 0, 0, 1.00001, 0, -1, -1.21193)
+transform = Transform3D(1.00001, 0, 0, 0, 1, 0, 0, 0, 1.00001, 0, -1, 0)
 operation = 2
 calculate_tangents = false
-size = Vector3(6, 8, 9.35986)
+size = Vector3(6, 8, 2)
 material = SubResource("StandardMaterial3D_56gx5")
 script = SubResource("GDScript_gelcq")
 
-[node name="door1" type="Area3D" parent="Doors/wall1/openW"]
+[node name="door1" type="Area3D" parent="Doors/wall1/openW" groups=["Door"]]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.27, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.100978, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/wall1/openW/door1"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/wall1/openW/door1" groups=["Door"]]
 shape = SubResource("BoxShape3D_nlxdp")
 
 [node name="wall2" type="CSGBox3D" parent="Doors"]
@@ -107,18 +94,16 @@ size = Vector3(30, 14.266, 2)
 material = SubResource("StandardMaterial3D_0r2ck")
 
 [node name="openE" type="CSGBox3D" parent="Doors/wall2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 1.92991)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 operation = 2
 calculate_tangents = false
-size = Vector3(6, 8, 8.92383)
+size = Vector3(6, 8, 2)
 material = SubResource("StandardMaterial3D_56gx5")
 
-[node name="door2" type="Area3D" parent="Doors/wall2/openE"]
+[node name="door2" type="Area3D" parent="Doors/wall2/openE" groups=["Door"]]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/wall2/openE/door2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0809364, -0.945434, -0.226744)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/wall2/openE/door2" groups=["Door"]]
 shape = SubResource("BoxShape3D_nlxdp")
 
 [node name="wall3" type="CSGBox3D" parent="Doors"]
@@ -130,15 +115,14 @@ size = Vector3(32, 14.266, 2)
 material = SubResource("StandardMaterial3D_0r2ck")
 
 [node name="openN" type="CSGBox3D" parent="Doors/wall3"]
-transform = Transform3D(1, 0, 2.4869e-14, 0, 1, 0, -2.4869e-14, 0, 1, 0, -1, 2.22459)
+transform = Transform3D(1, 0, 2.4869e-14, 0, 1, 0, -2.4869e-14, 0, 1, 0, -1, 0)
 operation = 2
 calculate_tangents = false
-size = Vector3(6, 8, 9.51318)
+size = Vector3(6, 8, 2)
 material = SubResource("StandardMaterial3D_56gx5")
 
-[node name="door3" type="Area3D" parent="Doors/wall3/openN"]
+[node name="door3" type="Area3D" parent="Doors/wall3/openN" groups=["Door"]]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/wall3/openN/door3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0809364, -0.945434, -2.32373)
@@ -153,16 +137,15 @@ size = Vector3(32, 14.266, 2)
 material = SubResource("StandardMaterial3D_0r2ck")
 
 [node name="openS" type="CSGBox3D" parent="Doors/wall4"]
-transform = Transform3D(1.00001, 0, 3.19744e-14, 0, 1, 0, -3.19744e-14, 0, 1.00001, -5.68434e-14, -1, -0.821306)
+transform = Transform3D(1.00001, 0, 3.19744e-14, 0, 1, 0, -3.19744e-14, 0, 1.00001, 0, -1, 0)
 operation = 2
 calculate_tangents = false
-size = Vector3(6, 8, 8.57861)
+size = Vector3(6, 8, 2)
 material = SubResource("StandardMaterial3D_56gx5")
 
-[node name="door4" type="Area3D" parent="Doors/wall4/openS"]
+[node name="door4" type="Area3D" parent="Doors/wall4/openS" groups=["Door"]]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/wall4/openS/door4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0809364, -0.945434, -2.32373)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.081, -1, -2.324)
 shape = SubResource("BoxShape3D_nlxdp")

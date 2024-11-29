@@ -93,6 +93,8 @@ func _physics_process(delta):
 		#if is_on_wall():
 			#wallrun(delta)
 		mobility(delta)
+		
+	
 
 
 func mobility(delta):
@@ -202,8 +204,11 @@ func _headbob(time) -> Vector3:
 	return pos
 
 func _on_hitbox_component_area_entered(area):
-	if not area.is_in_group("Pickup"):
-		return
-	var drop = await area.give_item()
-	%Weapons.pickup_item(drop)
+	if area.is_in_group("Pickup"):
+		var drop = await area.give_item()
+		%Weapons.pickup_item(drop)
+	elif area.is_in_group("Door"):
+		var door = area.get_parent()
+		door.operation = 2
+	
 	

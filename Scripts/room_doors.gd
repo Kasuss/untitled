@@ -3,10 +3,11 @@ extends MeshInstance3D
 @export var door_count : int
 var door = []
 var to_delete = []
+var doorway
 
 
 func _ready() -> void:
-	await get_tree().create_timer(5).timeout
+	await get_tree().create_timer(1).timeout
 	check_doors()
 	
 func check_doors():
@@ -15,11 +16,14 @@ func check_doors():
 		door.append(doorn)
 		door_count -= 1
 	for d in door:
-		if not d.has_overlapping_areas():
-			to_delete.append(d)
+		if d.has_overlapping_areas():
+			doorway = d.get_parent()
+			doorway.operation = 0
 			continue
+		to_delete.append(d)
+			
 	await get_tree().create_timer(1).timeout
 	print("penis2")
 	for d in to_delete:
-		var doorway = d.get_parent()
+		doorway = d.get_parent()
 		doorway.queue_free()

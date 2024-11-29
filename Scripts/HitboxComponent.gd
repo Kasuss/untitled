@@ -9,5 +9,3 @@ func damage(damage, multiplier):
 	damage = damage * multiplier
 	if health_component:
 		health_component.damage(damage)
-
-
