@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Pickups" load_steps=4 format=3 uid="uid://mryvldpcwb"]
+
+[ext_resource type="PackedScene" uid="uid://b3nv0031y5kk6" path="res://Scenes/Pickups/AmmoBox.tscn" id="1_1qmv5"]
+[ext_resource type="Texture2D" uid="uid://7k4cpa5417nq" path="res://Textures/UI/placeholder.png" id="2_oe03n"]
+[ext_resource type="Script" path="res://Resources/pickup_list.gd" id="3_1q1o6"]
+
+[resource]
+script = ExtResource("3_1q1o6")
+Icon = ExtResource("2_oe03n")
+Name = "Quick Pull"
+Type = "Attachment"
+Rarity = 25
+BoxColor = Color(0, 0, 0, 1)
+AttachmentStatBuff = 0.05
+AttachmentScene = ExtResource("1_1qmv5")
+AttachmentColor = Color(0.788182, 0.0925098, 0.296339, 1)
+BuffType = ""
+StatIncrease = 0.0

@@ -1,9 +1,9 @@
 [gd_scene load_steps=26 format=3 uid="uid://c2pl4fntkynr3"]
 
 [ext_resource type="Script" path="res://Scrapped/Cell.gd" id="1_dbtej"]
-[ext_resource type="Texture2D" uid="uid://d3jthd1baujnj" path="res://Textures/brick2.png" id="2_pj2ow"]
-[ext_resource type="Texture2D" uid="uid://dddpep2psguj4" path="res://Textures/brick1b.png" id="3_m3s1k"]
-[ext_resource type="Texture2D" uid="uid://g8xtuxug8rht" path="res://Textures/brick3.png" id="4_68bw8"]
+[ext_resource type="Texture2D" uid="uid://d3jthd1baujnj" path="res://Textures/World/brick2.png" id="2_pj2ow"]
+[ext_resource type="Texture2D" uid="uid://dddpep2psguj4" path="res://Textures/World/brick1b.png" id="3_m3s1k"]
+[ext_resource type="Texture2D" uid="uid://g8xtuxug8rht" path="res://Textures/World/brick3.png" id="4_68bw8"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cr2mf"]
 size = Vector3(2, 0, 2)

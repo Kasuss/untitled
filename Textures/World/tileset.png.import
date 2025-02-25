@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dddpep2psguj4"
-path.s3tc="res://.godot/imported/brick1b.png-0d9dbd7f1b596c44d1ce23f4c332b223.s3tc.ctex"
+uid="uid://d24yuog6hrqub"
+path.s3tc="res://.godot/imported/tileset.png-03350343467c0cc44dc2cd39b1292c7b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Textures/brick1b.png"
-dest_files=["res://.godot/imported/brick1b.png-0d9dbd7f1b596c44d1ce23f4c332b223.s3tc.ctex"]
+source_file="res://Textures/World/tileset.png"
+dest_files=["res://.godot/imported/tileset.png-03350343467c0cc44dc2cd39b1292c7b.s3tc.ctex"]
 
 [params]
 

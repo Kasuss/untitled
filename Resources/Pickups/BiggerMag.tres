@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Pickups" load_steps=4 format=3 uid="uid://cc87k4si2smsv"]
+
+[ext_resource type="PackedScene" uid="uid://b3nv0031y5kk6" path="res://Scenes/Pickups/AmmoBox.tscn" id="1_xf8io"]
+[ext_resource type="Texture2D" uid="uid://7k4cpa5417nq" path="res://Textures/UI/placeholder.png" id="2_h2rce"]
+[ext_resource type="Script" path="res://Resources/pickup_list.gd" id="2_l3e0o"]
+
+[resource]
+script = ExtResource("2_l3e0o")
+Icon = ExtResource("2_h2rce")
+Name = "Bigger Mag"
+Type = "Attachment"
+Rarity = 25
+BoxColor = Color(0, 0, 0, 1)
+AttachmentStatBuff = 0.1
+AttachmentScene = ExtResource("1_xf8io")
+AttachmentColor = Color(0.140447, 0.140447, 0.140447, 1)
+BuffType = ""
+StatIncrease = 0.0

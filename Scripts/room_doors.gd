@@ -9,6 +9,7 @@ var doorway
 func _ready() -> void:
 	await get_tree().create_timer(1).timeout
 	check_doors()
+	NavigationRegion3D.new().bake_navigation_mesh()
 	
 func check_doors():
 	while door_count > 0:
@@ -23,7 +24,6 @@ func check_doors():
 		to_delete.append(d)
 			
 	await get_tree().create_timer(1).timeout
-	print("penis2")
 	for d in to_delete:
 		doorway = d.get_parent()
 		doorway.queue_free()

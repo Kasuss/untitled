@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="WeaponDefaults" load_steps=2 format=3 uid="uid://dbqv0p1cuv4bi"]
+[gd_resource type="Resource" script_class="WeaponDefaults" load_steps=3 format=3 uid="uid://dbqv0p1cuv4bi"]
 
 [ext_resource type="Script" path="res://Resources/weapon_manager.gd" id="1_gtrmd"]
+[ext_resource type="Texture2D" uid="uid://c8p33csjc1e2x" path="res://Textures/UI/shotgun.png" id="1_p7282"]
 
 [resource]
 script = ExtResource("1_gtrmd")
+Icon = ExtResource("1_p7282")
 Name = "DBPShotgun"
 Type = "Shotgun"
 AmmoType = "Heavy"

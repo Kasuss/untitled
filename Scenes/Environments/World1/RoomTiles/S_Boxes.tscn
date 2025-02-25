@@ -1,0 +1,55 @@
+[gd_scene load_steps=7 format=3 uid="uid://degjylbkf8r5d"]
+
+[ext_resource type="Texture2D" uid="uid://d3jthd1baujnj" path="res://Textures/World/brick2.png" id="2_allgu"]
+[ext_resource type="Texture2D" uid="uid://g8xtuxug8rht" path="res://Textures/World/brick3.png" id="3_a8dhd"]
+[ext_resource type="PackedScene" uid="uid://dckb0rjdh5nb6" path="res://Scenes/Environments/World1/Objects/Boxes.tscn" id="4_ipg6v"]
+[ext_resource type="PackedScene" uid="uid://mg218ixcg8mc" path="res://Scenes/Environments/World1/Objects/BigBox.tscn" id="5_e6s0l"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0nrf5"]
+albedo_texture = ExtResource("2_allgu")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k3hh5"]
+albedo_texture = ExtResource("3_a8dhd")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[node name="SBasic" type="Node3D"]
+
+[node name="SmallRoom" type="MeshInstance3D" parent="."]
+visible = false
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="SmallRoom"]
+layers = 3
+use_collision = true
+collision_layer = 257
+collision_mask = 257
+
+[node name="ceiling" type="CSGBox3D" parent="SmallRoom/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, 0)
+visible = false
+size = Vector3(28, 2, 28)
+material = SubResource("StandardMaterial3D_0nrf5")
+
+[node name="floor" type="CSGBox3D" parent="SmallRoom/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+size = Vector3(28, 2, 28)
+material = SubResource("StandardMaterial3D_k3hh5")
+
+[node name="Boxes" parent="." instance=ExtResource("4_ipg6v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7271, 2, 8.76782)
+
+[node name="Boxes2" parent="." instance=ExtResource("4_ipg6v")]
+transform = Transform3D(0.178253, 0, 0.983985, 0, 1, 0, -0.983985, 0, 0.178253, 11.3146, 2, 6.76266)
+
+[node name="Boxes3" parent="." instance=ExtResource("4_ipg6v")]
+transform = Transform3D(-0.119825, 0, -0.992795, 0, 1, 0, 0.992795, 0, -0.119825, 11.5087, 4.01833, 7.52526)
+
+[node name="Pillar" parent="." instance=ExtResource("5_e6s0l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.96711, 2, -7.31928)
+
+[node name="Pillar2" parent="." instance=ExtResource("5_e6s0l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.892845, 2, 5.26977)

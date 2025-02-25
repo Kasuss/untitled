@@ -1,9 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://buirlqrps11y8"]
+[gd_scene load_steps=11 format=3 uid="uid://buirlqrps11y8"]
 
 [ext_resource type="Script" path="res://Scenes/Environments/Generator/world.gd" id="1_x5eqn"]
 [ext_resource type="PackedScene" uid="uid://bedn7ush3qg2y" path="res://Scenes/Environments/Generator/main.tscn" id="2_qriws"]
 [ext_resource type="Script" path="res://Scenes/Environments/Generator/map.gd" id="2_rmcai"]
+[ext_resource type="PackedScene" uid="uid://dcgsr7abomden" path="res://Scenes/Environments/World1/RoomTiles/S_Basic.tscn" id="3_7gi8v"]
 [ext_resource type="PackedScene" uid="uid://bo4xu3h0hcojs" path="res://Scenes/Player/player.tscn" id="3_b3nxk"]
+[ext_resource type="PackedScene" uid="uid://degjylbkf8r5d" path="res://Scenes/Environments/World1/RoomTiles/S_Boxes.tscn" id="4_3roqo"]
+[ext_resource type="PackedScene" uid="uid://d3qq43s8gqqbp" path="res://Scenes/Environments/World1/RoomTiles/M_Basic.tscn" id="4_ghlit"]
+[ext_resource type="PackedScene" uid="uid://2xxfftfiqwr8" path="res://Scenes/Environments/World1/RoomTiles/L_Basic.tscn" id="5_fjvm6"]
 
 [sub_resource type="MeshLibrary" id="MeshLibrary_ofbrs"]
 item/0/name = ""
@@ -17,6 +21,9 @@ item/0/navigation_layers = 1
 [node name="world" type="Node3D"]
 script = ExtResource("1_x5eqn")
 Map = ExtResource("2_qriws")
+SmallF = Array[PackedScene]([ExtResource("3_7gi8v"), ExtResource("4_3roqo")])
+WideF = Array[PackedScene]([ExtResource("4_ghlit")])
+BigF = Array[PackedScene]([ExtResource("5_fjvm6")])
 
 [node name="Rooms" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -46,3 +53,6 @@ transform = Transform3D(1, 0, 0, 0, -0.0156899, 0.999877, 0, -0.999877, -0.01568
 spot_range = 477.581
 spot_attenuation = 13.35
 spot_angle = 89.99
+
+[node name="Enemies" type="Node3D" parent="."]
+unique_name_in_owner = true

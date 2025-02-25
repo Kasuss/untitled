@@ -24,9 +24,12 @@ func spawn_item(item):
 	var type = item[1]
 	var mesh
 	print(type)
-	if type == "Ammo":
+	if type == "Ammo" or type == "Attachment":
+		if type == "Ammo":
+			color = res.BoxColor
+		if type == "Attachment":
+			color = res.AttachmentColor
 		var material = load("res://Models/Pickups/AmmoMat.tres")
-		color = res.BoxColor
 		material.albedo_color = color
 		var box = BOX.instantiate()
 		add_child(box)

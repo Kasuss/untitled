@@ -1,19 +1,25 @@
 extends Node3D
 
 signal done
-signal doors
 
 const SMALL = preload("res://Scenes/Environments/World1/RoomTemplates/SmallRoom.tscn")
 const MED = preload("res://Scenes/Environments/World1/RoomTemplates/MediumRoom.tscn")
 const BIG = preload("res://Scenes/Environments/World1/RoomTemplates/LargeRoom.tscn")
 
+var start
 var small
 var wide
 var big
 var pos = []
 var rot = []
+var ai = NavigationRegion3D.new()
+		
 
 @export var Map : PackedScene
+
+@export var SmallF : Array[PackedScene]
+@export var WideF : Array[PackedScene]
+@export var BigF : Array[PackedScene]
 
 func _ready() -> void:
 	randomize()
@@ -47,27 +53,54 @@ func create_rooms(s,w,b,pos,rot):
 	var p = pos
 	var r = rot
 	for n in s:
+		SmallF.shuffle()
 		var m = SMALL.instantiate()
 		%Rooms.add_child(m)
 		m.global_position = Vector3(p[0].x,0,p[0].y)
 		p.pop_front()
+		if n == small[0]:
+			start = m.global_position
+			continue
+		var f = SmallF[0].instantiate()
+		m.add_child(f)
+		match randi() % 3:
+			0:
+				f.global_rotation_degrees.y = 0
+			1:
+				f.global_rotation_degrees.y = 90
+			2:
+				f.global_rotation_degrees.y = 180
+			3:
+				f.global_rotation_degrees.y = 270
 	for n in w:
+		WideF.shuffle()
+		var f = WideF[0].instantiate()
 		var m = MED.instantiate()
 		%Rooms.add_child(m)
+		m.add_child(f)
 		m.global_position = Vector3(p[0].x,0,p[0].y)
-		if rot[0] == 0:
+		if randi() % 1 == 0: f.global_rotation_degrees.y = 180
+		else: f.global_rotation_degrees.y = 0
+		if rot[0] == 0 or null:
 			m.global_rotation_degrees.y = -90
+			if randi() % 1 == 0: f.global_rotation_degrees.y = -90
+			else: f.global_rotation_degrees.y = 90
 		p.pop_front()
 		r.pop_front()
 	for n in b:
+		BigF.shuffle()
+		var f = BigF[0].instantiate()
 		var m = BIG.instantiate()
 		%Rooms.add_child(m)
+		m.add_child(f)
 		m.global_position = Vector3(p[0].x,0,p[0].y)
 		p.pop_front()
-	doors.emit()
-	connect_rooms()
+	fill_rooms()
 
-func connect_rooms():
-	var starting_room = small[0].global_position
-	%player.global_position = Vector3(starting_room.x,6,starting_room.y)
-	pass
+func fill_rooms():
+	#for r in %Rooms.get_children():
+		##for e in %Enemies:
+			##ai.navigation_mesh
+	await get_tree().create_timer(5).timeout
+	%player.global_position = Vector3(start.x,6,start.z)		
+	

@@ -1,12 +1,15 @@
-[gd_resource type="Resource" script_class="WeaponDefaults" load_steps=2 format=3 uid="uid://qw070jtfx7jn"]
+[gd_resource type="Resource" script_class="WeaponDefaults" load_steps=3 format=3 uid="uid://qw070jtfx7jn"]
 
+[ext_resource type="Texture2D" uid="uid://cofcba3vfi44e" path="res://Textures/UI/pistol.png" id="1_2jqgk"]
 [ext_resource type="Script" path="res://Resources/weapon_manager.gd" id="1_oqxmi"]
 
 [resource]
 script = ExtResource("1_oqxmi")
+Icon = ExtResource("1_2jqgk")
 Name = "Pistol"
 Type = "Pistol"
 AmmoType = "Light"
+AltFire = false
 AmmoCap = 20
 LoadedAmmo = 20
 Damage = 5

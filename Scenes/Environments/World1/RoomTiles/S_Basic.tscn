@@ -4,5 +4,8 @@
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.90232, 0)
+use_collision = true
+collision_layer = 257
+collision_mask = 257
 radius = 2.0
 height = 12.0

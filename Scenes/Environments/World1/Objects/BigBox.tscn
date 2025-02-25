@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://mg218ixcg8mc"]
 
-[ext_resource type="Texture2D" uid="uid://b2ryb1du0t8i8" path="res://Textures/brick1.png" id="1_heyvv"]
+[ext_resource type="Texture2D" uid="uid://b2ryb1du0t8i8" path="res://Textures/World/brick1.png" id="1_heyvv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6hbw4"]
 vertex_color_use_as_albedo = true

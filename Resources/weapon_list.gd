@@ -12,28 +12,30 @@ var epics : Array
 
 func _ready():
 	randomize()
-	for g in guns:
-		if g.Rarity == 0:
-			g.Rarity = 60
+	for g in Global.wep_id:
+		var w = load(Global.wep_id[g])
+		print(w)
+		if w.Rarity == 0:
+			w.Rarity = 60
 		
-		if g.Rarity == 60:
-			commons.append(g)
-		elif g.Rarity == 25:
-			rares.append(g)
+		if w.Rarity == 60:
+			commons.append(w)
+		elif w.Rarity == 25:
+			rares.append(w)
 		else:
-			epics.append(g)
+			epics.append(w)
 			
-	for p in pickups:
-		print(p.Rarity)
-		if p.Rarity == 0:
-			p.Rarity = 60
+	for p in Global.item_id:
+		var w = load(Global.item_id[p])
+		if w.Rarity == 0:
+			w.Rarity = 60
 			
-		if p.Rarity == 60:
-			commons.append(p)
-		elif p.Rarity == 25:
-			rares.append(p)
+		if w.Rarity == 60:
+			commons.append(w)
+		elif w.Rarity == 25:
+			rares.append(w)
 		else:
-			epics.append(p)
+			epics.append(w)
 
 func item_dropped():
 	var roll = randi_range(1,100)

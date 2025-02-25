@@ -5,6 +5,7 @@ extends CharacterBody3D
 @onready var root = get_tree().get_root()
 
 signal in_air(air)
+signal dash_used
 
 ##State
 var slidejumping = false
@@ -18,8 +19,8 @@ var dash_cd = 0.0
 var speed
 var dash_direction = Vector3(0,0,0)
 var sliding_direction = Vector3(0,0,0)
-const WALK_SPEED = 12.0
-const DASH_SPEED = 50.0
+const WALK_SPEED = 8.0
+const DASH_SPEED = 40.0
 const SLIDE_SPEED = 25.0
 const CROUCH_SPEED = 3.0
 const JUMP_VELOCITY = 4.5
@@ -171,10 +172,12 @@ func dashing(delta):
 	if speed <= WALK_SPEED:
 		dash_cd = 3
 		dash = false
+		dash_used.emit(dash_cd)
 	# FOV
 	var velocity_clamped = clamp(velocity.length(), 0.5, DASH_SPEED * 2)
 	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
 	camera.fov = lerp(camera.fov, target_fov, delta * 7.0)
+	
 	
 func wallrun(delta):
 	##to be returned to

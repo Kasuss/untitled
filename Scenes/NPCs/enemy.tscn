@@ -1,9 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://j1w7bkvy0cf8"]
+[gd_scene load_steps=12 format=3 uid="uid://j1w7bkvy0cf8"]
 
+[ext_resource type="Script" path="res://Scenes/NPCs/enemy.gd" id="1_41wb7"]
 [ext_resource type="PackedScene" uid="uid://cx4y658vvqbdy" path="res://Scenes/Components/health_component.tscn" id="1_chorv"]
 [ext_resource type="PackedScene" uid="uid://qunglynxovun" path="res://Scenes/Components/headbox_component.tscn" id="2_3bqnc"]
 [ext_resource type="PackedScene" uid="uid://cnm16hqcv8nsk" path="res://Scenes/Components/hitbox_component.tscn" id="2_yrpw1"]
-[ext_resource type="Script" path="res://Scenes/Components/hitmarker_component.gd" id="3_u2wtu"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wa8hr"]
 radius = 0.25
@@ -25,10 +25,14 @@ height = 1.00058
 radius = 0.289749
 height = 0.664048
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_gplfl"]
+radius = 8.50201
+
 [node name="enemy" type="CharacterBody3D"]
 motion_mode = 1
 floor_stop_on_slope = false
 platform_on_leave = 2
+script = ExtResource("1_41wb7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_wa8hr")
@@ -45,14 +49,10 @@ mesh = SubResource("SphereMesh_0fvea")
 surface_material_override/0 = SubResource("StandardMaterial3D_0k07l")
 
 [node name="HealthComponent" parent="." instance=ExtResource("1_chorv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00185728, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.19783, 0)
 MAX_HEALTH = 40.0
 
 [node name="Components" type="Node3D" parent="."]
-
-[node name="HitmarkerComponent" type="Node3D" parent="Components"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.32, 0)
-script = ExtResource("3_u2wtu")
 
 [node name="HitboxComponent" parent="Components" node_paths=PackedStringArray("health_component") instance=ExtResource("2_yrpw1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -62,10 +62,24 @@ health_component = NodePath("../../HealthComponent")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="Components/HitboxComponent"]
 shape = SubResource("CapsuleShape3D_yr5rw")
 
-[node name="HeadboxComponent2" parent="Components" node_paths=PackedStringArray("health_component") instance=ExtResource("2_3bqnc")]
+[node name="HeadboxComponent" parent="Components" node_paths=PackedStringArray("health_component") instance=ExtResource("2_3bqnc")]
 collision_layer = 2
 health_component = NodePath("../../HealthComponent")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Components/HeadboxComponent2"]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Components/HeadboxComponent"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6165, 0)
 shape = SubResource("CapsuleShape3D_3qw1y")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 9
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05757, 0)
+shape = SubResource("SphereShape3D_gplfl")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

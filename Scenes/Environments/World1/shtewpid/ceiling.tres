@@ -1,6 +1,6 @@
 [gd_resource type="BoxMesh" load_steps=3 format=3 uid="uid://ddwcqlmdpti5r"]
 
-[ext_resource type="Texture2D" uid="uid://d3jthd1baujnj" path="res://Textures/brick2.png" id="1_luw2x"]
+[ext_resource type="Texture2D" uid="uid://d3jthd1baujnj" path="res://Textures/World/brick2.png" id="1_luw2x"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g6rr5"]
 albedo_texture = ExtResource("1_luw2x")

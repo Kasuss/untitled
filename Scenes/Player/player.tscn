@@ -1,21 +1,95 @@
-[gd_scene load_steps=17 format=3 uid="uid://bo4xu3h0hcojs"]
+[gd_scene load_steps=28 format=3 uid="uid://bo4xu3h0hcojs"]
 
 [ext_resource type="Texture2D" uid="uid://dfrs6qakpp3m4" path="res://Textures/UI/crosshair.png" id="1_bq2g6"]
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_tn7hv"]
-[ext_resource type="Script" path="res://Scripts/crosshair.gd" id="2_mfkjx"]
 [ext_resource type="Script" path="res://Scripts/Hud.gd" id="2_omrh8"]
+[ext_resource type="Script" path="res://Scenes/Player/inventory.gd" id="3_g2urk"]
+[ext_resource type="Texture2D" uid="uid://bkt0pgxj5g4t1" path="res://Textures/UI/boolet.png" id="3_txtqp"]
+[ext_resource type="Texture2D" uid="uid://drh2akh4tfdj4" path="res://Textures/UI/dash.png" id="3_yg5xh"]
 [ext_resource type="PackedScene" uid="uid://cnm16hqcv8nsk" path="res://Scenes/Components/hitbox_component.tscn" id="5_l30iv"]
 [ext_resource type="Script" path="res://Scripts/Weapons.gd" id="5_lk4yc"]
 [ext_resource type="Resource" uid="uid://qw070jtfx7jn" path="res://Resources/Weapons/Pistol.tres" id="6_dog5w"]
 [ext_resource type="Script" path="res://Resources/weapon_manager.gd" id="6_gpuqy"]
 [ext_resource type="PackedScene" uid="uid://cx4y658vvqbdy" path="res://Scenes/Components/health_component.tscn" id="6_rg2e4"]
+[ext_resource type="PackedScene" uid="uid://jg74gti6m501" path="res://Scenes/Components/InventoryComponent.tscn" id="7_03sdx"]
 [ext_resource type="Resource" uid="uid://dbqv0p1cuv4bi" path="res://Resources/Weapons/DBPShotgun.tres" id="7_6cmj7"]
+[ext_resource type="Texture2D" uid="uid://7k4cpa5417nq" path="res://Textures/UI/placeholder.png" id="8_vywxu"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_5a4it"]
 font_size = 36
 font_color = Color(1, 1, 0, 1)
 outline_size = 3
 outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_b1ckh"]
+font_size = 36
+font_color = Color(1, 0, 0, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_v8dlu"]
+font_size = 24
+font_color = Color(1, 0, 0, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_mfek2"]
+font_italic = true
+
+[sub_resource type="Animation" id="Animation_bwbh4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Panel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(61.5, 800)]
+}
+
+[sub_resource type="Animation" id="Animation_bd7li"]
+resource_name = "inventory_down"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Panel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(61.5, 64.5), Vector2(61.5, 800)]
+}
+
+[sub_resource type="Animation" id="Animation_3okcc"]
+resource_name = "inventory"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Panel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(61.5, 800), Vector2(61.5, 64.5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tc6w2"]
+_data = {
+"RESET": SubResource("Animation_bwbh4"),
+"inventory_down": SubResource("Animation_bd7li"),
+"inventory_up": SubResource("Animation_3okcc")
+}
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_jx0nl"]
 
@@ -86,7 +160,7 @@ _data = {
 }
 
 [node name="player" type="CharacterBody3D" groups=["Player"]]
-collision_mask = 257
+collision_mask = 265
 up_direction = Vector3(0, -1, 0)
 script = ExtResource("1_tn7hv")
 
@@ -115,15 +189,324 @@ label_settings = SubResource("LabelSettings_5a4it")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="crosshair" type="CanvasLayer" parent="."]
-follow_viewport_enabled = true
+[node name="DashIcon" type="TextureRect" parent="UI"]
+unique_name_in_owner = true
+offset_left = 39.0
+offset_top = 607.0
+offset_right = 103.0
+offset_bottom = 671.0
+texture = ExtResource("3_yg5xh")
 
-[node name="TextureRect" type="TextureRect" parent="crosshair"]
+[node name="DashCD" type="Label" parent="UI/DashIcon"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 64.0
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_b1ckh")
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="Crosshair" type="TextureRect" parent="UI"]
+unique_name_in_owner = true
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("1_bq2g6")
-script = ExtResource("2_mfkjx")
 metadata/_edit_use_anchors_ = true
+
+[node name="EnemyCount" type="Label" parent="UI"]
+unique_name_in_owner = true
+offset_left = 487.0
+offset_top = 19.0
+offset_right = 807.0
+offset_bottom = 69.0
+size_flags_horizontal = 4
+text = "X Enemies Remain"
+label_settings = SubResource("LabelSettings_v8dlu")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Inventory" type="CanvasLayer" parent="."]
+process_mode = 3
+script = ExtResource("3_g2urk")
+
+[node name="Panel" type="Panel" parent="Inventory"]
+anchors_preset = -1
+anchor_left = 0.048
+anchor_top = 0.0895833
+anchor_right = 0.952
+anchor_bottom = 1.883
+offset_left = 0.0599976
+offset_top = 735.5
+offset_right = -0.0600586
+offset_bottom = 35.2399
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="TextEdit" type="Label" parent="Inventory/Panel"]
+layout_mode = 0
+offset_left = 65.0
+offset_right = 243.0
+offset_bottom = 54.0
+theme_override_fonts/font = SubResource("SystemFont_mfek2")
+theme_override_font_sizes/font_size = 30
+text = "INVENTORY"
+
+[node name="SmallAmmo" type="Label" parent="Inventory/Panel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 247.5
+offset_top = 300.5
+offset_right = 425.5
+offset_bottom = 354.5
+theme_override_fonts/font = SubResource("SystemFont_mfek2")
+theme_override_font_sizes/font_size = 30
+
+[node name="MedAmmo" type="Label" parent="Inventory/Panel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 247.5
+offset_top = 396.5
+offset_right = 425.5
+offset_bottom = 450.5
+theme_override_fonts/font = SubResource("SystemFont_mfek2")
+theme_override_font_sizes/font_size = 30
+
+[node name="HeavyAmmo" type="Label" parent="Inventory/Panel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 247.5
+offset_top = 492.5
+offset_right = 425.5
+offset_bottom = 546.5
+theme_override_fonts/font = SubResource("SystemFont_mfek2")
+theme_override_font_sizes/font_size = 30
+
+[node name="Boolet" type="Sprite2D" parent="Inventory/Panel"]
+position = Vector2(105.5, 331.5)
+texture = ExtResource("3_txtqp")
+
+[node name="Boolet5" type="Sprite2D" parent="Inventory/Panel/Boolet"]
+position = Vector2(64, 192)
+texture = ExtResource("3_txtqp")
+
+[node name="Boolet3" type="Sprite2D" parent="Inventory/Panel/Boolet"]
+position = Vector2(0, 192)
+texture = ExtResource("3_txtqp")
+
+[node name="Boolet2" type="Sprite2D" parent="Inventory/Panel/Boolet"]
+position = Vector2(-32, 96)
+texture = ExtResource("3_txtqp")
+
+[node name="Boolet4" type="Sprite2D" parent="Inventory/Panel/Boolet"]
+position = Vector2(32, 96)
+texture = ExtResource("3_txtqp")
+
+[node name="Boolet6" type="Sprite2D" parent="Inventory/Panel/Boolet"]
+position = Vector2(-64, 192)
+texture = ExtResource("3_txtqp")
+
+[node name="ItemList" type="ItemList" parent="Inventory/Panel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 363.5
+offset_top = 67.5
+offset_right = 1096.5
+offset_bottom = 517.5
+allow_search = false
+max_columns = 4
+same_column_width = true
+fixed_column_width = 175
+icon_mode = 0
+fixed_icon_size = Vector2i(64, 64)
+
+[node name="InventorySlots" type="Control" parent="Inventory/Panel"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = 16.0
+offset_top = 48.0
+offset_right = 16.0
+offset_bottom = 48.0
+
+[node name="InvBox0" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 64.0
+offset_right = 64.0
+offset_bottom = 128.0
+
+[node name="InvBox1" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 160.0
+offset_right = 64.0
+offset_bottom = 224.0
+
+[node name="InvBox2" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 256.0
+offset_right = 64.0
+offset_bottom = 320.0
+
+[node name="InvBox3" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 352.0
+offset_right = 64.0
+offset_bottom = 416.0
+
+[node name="InvBox4" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 521.5
+offset_top = 64.0
+offset_right = 585.5
+offset_bottom = 128.0
+texture = ExtResource("8_vywxu")
+
+[node name="InvBox5" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 521.5
+offset_top = 160.0
+offset_right = 585.5
+offset_bottom = 224.0
+
+[node name="InvBox6" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 521.5
+offset_top = 256.0
+offset_right = 585.5
+offset_bottom = 320.0
+
+[node name="InvBox7" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 521.5
+offset_top = 352.0
+offset_right = 585.5
+offset_bottom = 416.0
+
+[node name="InvBox8" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 617.5
+offset_top = 64.0
+offset_right = 681.5
+offset_bottom = 128.0
+
+[node name="InvBox9" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 617.5
+offset_top = 160.0
+offset_right = 681.5
+offset_bottom = 224.0
+
+[node name="InvBox10" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 617.5
+offset_top = 256.0
+offset_right = 681.5
+offset_bottom = 320.0
+
+[node name="InvBox11" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 617.5
+offset_top = 352.0
+offset_right = 681.5
+offset_bottom = 416.0
+
+[node name="InvBox12" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 713.5
+offset_top = 64.0
+offset_right = 777.5
+offset_bottom = 128.0
+
+[node name="InvBox13" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 713.5
+offset_top = 160.0
+offset_right = 777.5
+offset_bottom = 224.0
+
+[node name="InvBox14" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 713.5
+offset_top = 256.0
+offset_right = 777.5
+offset_bottom = 320.0
+
+[node name="InvBox15" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 713.5
+offset_top = 352.0
+offset_right = 777.5
+offset_bottom = 416.0
+
+[node name="InvBox16" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 809.5
+offset_top = 64.0
+offset_right = 873.5
+offset_bottom = 128.0
+
+[node name="InvBox17" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 809.5
+offset_top = 160.0
+offset_right = 873.5
+offset_bottom = 224.0
+
+[node name="InvBox18" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 809.5
+offset_top = 256.0
+offset_right = 873.5
+offset_bottom = 320.0
+
+[node name="InvBox19" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 809.5
+offset_top = 352.0
+offset_right = 873.5
+offset_bottom = 416.0
+
+[node name="InvBox20" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 905.5
+offset_top = 64.0
+offset_right = 969.5
+offset_bottom = 128.0
+
+[node name="InvBox21" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 905.5
+offset_top = 160.0
+offset_right = 969.5
+offset_bottom = 224.0
+
+[node name="InvBox22" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 905.5
+offset_top = 256.0
+offset_right = 969.5
+offset_bottom = 320.0
+
+[node name="InvBox23" parent="Inventory/Panel/InventorySlots" instance=ExtResource("7_03sdx")]
+layout_mode = 0
+offset_left = 905.5
+offset_top = 352.0
+offset_right = 969.5
+offset_bottom = 416.0
+
+[node name="InventoryAnim" type="AnimationPlayer" parent="Inventory"]
+unique_name_in_owner = true
+process_mode = 3
+libraries = {
+"": SubResource("AnimationLibrary_tc6w2")
+}
 
 [node name="Head" type="Node3D" parent="."]
 
@@ -139,7 +522,7 @@ fov = 37.8493
 [node name="Pivot" type="Marker3D" parent="Head/Camera3D"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, -0.095, 0.265)
-gizmo_extents = 0.5
+gizmo_extents = 1.45
 
 [node name="Weapons" type="Node3D" parent="Head/Camera3D/Pivot"]
 unique_name_in_owner = true
@@ -242,6 +625,10 @@ shape = SubResource("CapsuleShape3D_jrcsa")
 
 [node name="HealthComponent" parent="." instance=ExtResource("6_rg2e4")]
 
+[connection signal="dash_used" from="." to="UI" method="_on_player_dash_used"]
+[connection signal="inventory_change" from="Inventory" to="Inventory/Panel/InventorySlots/InvBox0" method="_on_inventory_inventory_change"]
+[connection signal="item_pickup" from="Head/Camera3D/Pivot/Weapons" to="Inventory" method="_on_weapons_item_pickup"]
 [connection signal="update_ammo" from="Head/Camera3D/Pivot/Weapons" to="UI" method="_on_weapon_update_ammo"]
+[connection signal="update_ammo" from="Head/Camera3D/Pivot/Weapons" to="Inventory" method="_on_weapons_update_ammo"]
 [connection signal="animation_finished" from="CameraControl" to="Head/Camera3D/Pivot/Weapons" method="_on_camera_control_animation_finished"]
 [connection signal="area_entered" from="HitboxComponent" to="." method="_on_hitbox_component_area_entered"]

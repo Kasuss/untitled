@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://jg74gti6m501"]
+
+[ext_resource type="Script" path="res://Scenes/Player/inv_box.gd" id="2_ukk5n"]
+
+[node name="InvBox" type="TextureRect" groups=["Inventory"]]
+offset_left = 425.5
+offset_top = 134.0
+offset_right = 489.5
+offset_bottom = 198.0
+expand_mode = 1
+script = ExtResource("2_ukk5n")
+
+[node name="Panel" type="Panel" parent="."]
+show_behind_parent = true
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 64.0
+mouse_filter = 2

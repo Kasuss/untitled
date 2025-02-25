@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://duev0rn834k4v"
-path="res://.godot/imported/brick3b.png-87d448f7c29fa9181050513bae1930f1.ctex"
+uid="uid://c8p33csjc1e2x"
+path="res://.godot/imported/shotgun.png-31a3a894ba837d7b508a63dadbf1059d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/brick3b.png"
-dest_files=["res://.godot/imported/brick3b.png-87d448f7c29fa9181050513bae1930f1.ctex"]
+source_file="res://Textures/UI/shotgun.png"
+dest_files=["res://.godot/imported/shotgun.png-31a3a894ba837d7b508a63dadbf1059d.ctex"]
 
 [params]
 

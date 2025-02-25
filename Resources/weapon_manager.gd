@@ -5,6 +5,7 @@ class_name WeaponDefaults
 signal update_stats
 
 @export_category("Weapon Stats")
+@export var Icon: Texture2D
 @export var Name: String
 @export_enum("Pistol","Shotgun") var Type: String
 @export_enum("Light","Medium","Heavy") var AmmoType: String

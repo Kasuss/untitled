@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://chqy5081pejvy"]
+[gd_scene load_steps=16 format=3 uid="uid://chqy5081pejvy"]
 
 [ext_resource type="Script" path="res://Scripts/WeaponPickup.gd" id="1_3bo4v"]
 [ext_resource type="Script" path="res://Resources/weapon_list.gd" id="2_6lf5l"]
@@ -7,6 +7,10 @@
 [ext_resource type="Resource" uid="uid://jqpvp4pqndsx" path="res://Resources/Pickups/LightAmmo.tres" id="5_gyicw"]
 [ext_resource type="Resource" uid="uid://dag41lquyitis" path="res://Resources/Pickups/MediumAmmo.tres" id="6_lymef"]
 [ext_resource type="Resource" uid="uid://y2nbanebch56" path="res://Resources/Pickups/HeavyAmmo.tres" id="7_hmd0m"]
+[ext_resource type="Resource" uid="uid://cc87k4si2smsv" path="res://Resources/Pickups/BiggerMag.tres" id="8_25eql"]
+[ext_resource type="Resource" uid="uid://mryvldpcwb" path="res://Resources/Pickups/QuickPull.tres" id="9_s8fqb"]
+[ext_resource type="Resource" uid="uid://b4kucypfcxqnr" path="res://Resources/Pickups/StrongerBullets.tres" id="10_5lv13"]
+[ext_resource type="Resource" uid="uid://ba2clhop6yb7m" path="res://Resources/Pickups/TriggerFinger.tres" id="11_fwbdv"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_iguna"]
 radius = 0.842804
@@ -74,6 +78,7 @@ _data = {
 }
 
 [node name="Pickup" type="Area3D" groups=["Pickup"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_layer = 256
 script = ExtResource("1_3bo4v")
 all_weapons = Array[String](["Pistol", "DBPShotgun"])
@@ -87,8 +92,8 @@ unique_name_in_owner = true
 [node name="WeaponList" type="Node3D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_6lf5l")
-guns = Array[Resource]([ExtResource("4_itsry"), ExtResource("3_ngwt0")])
-pickups = Array[Resource]([ExtResource("5_gyicw"), ExtResource("6_lymef"), ExtResource("7_hmd0m")])
+guns = Array[Resource]([ExtResource("3_ngwt0"), ExtResource("4_itsry")])
+pickups = Array[Resource]([ExtResource("5_gyicw"), ExtResource("6_lymef"), ExtResource("7_hmd0m"), ExtResource("8_25eql"), ExtResource("9_s8fqb"), ExtResource("10_5lv13"), ExtResource("11_fwbdv")])
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
